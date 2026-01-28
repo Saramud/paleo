@@ -10,15 +10,23 @@ import { colors, radii, spacing, type } from "../theme/tokens";
 type PillButtonProps = PropsWithChildren<{
   tone?: "primary" | "ghost";
   onPress?: () => void;
+  style?: object;
+  textStyle?: object;
 }>;
 
-export function PillButton({ children, tone = "primary", onPress }: PillButtonProps) {
+export function PillButton({
+  children,
+  tone = "primary",
+  onPress,
+  style,
+  textStyle
+}: PillButtonProps) {
   const pressAnim = useRef(new Animated.Value(1)).current;
   const backgroundColor = useMemo(
-    () => (tone === "primary" ? colors.accent : "rgba(255,255,255,0.12)"),
+    () => (tone === "primary" ? colors.accent : colors.surfaceStrong),
     [tone]
   );
-  const textColor = tone === "primary" ? "#101216" : colors.textPrimary;
+  const textColor = tone === "primary" ? "#FFFFFF" : colors.textPrimary;
 
   const onPressIn = () => {
     Animated.spring(pressAnim, { toValue: 0.98, useNativeDriver: true }).start();
@@ -30,8 +38,10 @@ export function PillButton({ children, tone = "primary", onPress }: PillButtonPr
 
   return (
     <Pressable onPress={onPress} onPressIn={onPressIn} onPressOut={onPressOut}>
-      <Animated.View style={[styles.base, { backgroundColor, transform: [{ scale: pressAnim }] }]}>
-        <Text style={[styles.text, { color: textColor }]}>{children}</Text>
+      <Animated.View
+        style={[styles.base, { backgroundColor, transform: [{ scale: pressAnim }] }, style]}
+      >
+        <Text style={[styles.text, { color: textColor }, textStyle]}>{children}</Text>
       </Animated.View>
     </Pressable>
   );
@@ -43,7 +53,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xl,
     borderRadius: radii.xl,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.12)"
+    borderColor: colors.stroke
   },
   text: {
     fontFamily: type.bodyMedium,

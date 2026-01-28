@@ -15,3 +15,4 @@
 ## Notes
 - Keep changes minimal and avoid refactors unless requested.
 - Prefer updating UI components in `components/` and design tokens in `theme/tokens.ts`.
+- Follow the Kidsout-inspired style: light background, warm orange accent, soft rounded cards, large hero titles, uppercase kicker labels, and calm, friendly spacing.

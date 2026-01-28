@@ -25,7 +25,7 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <SessionProvider>
-        <StatusBar style="light" />
+        <StatusBar style="dark" />
         <RootNavigator />
       </SessionProvider>
     </SafeAreaProvider>
@@ -50,7 +50,6 @@ function RootNavigator() {
         <>
           <Stack.Screen name="(seeker)" />
           <Stack.Screen name="(provider)" />
-          <Stack.Screen name="palette" />
         </>
       ) : (
         <Stack.Screen name="role-select" />

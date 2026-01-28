@@ -1,40 +1,17 @@
-import { Link, useRouter } from "expo-router";
-import { useEffect, useRef, useState } from "react";
-import {
-  Animated,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View
-} from "react-native";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { GradientBackdrop } from "../../components/GradientBackdrop";
-import { GlassCard } from "../../components/GlassCard";
 import { PillButton } from "../../components/PillButton";
-import { SectionHeader } from "../../components/SectionHeader";
 import type { JobRequest } from "../../src/domain/types";
 import { mockStore } from "../../src/data/mockStore";
 import { useSession } from "../../src/session/SessionContext";
-import { colors, radii, spacing, type } from "../../theme/tokens";
+import { colors, spacing, type } from "../../theme/tokens";
 
 export default function Home() {
   const { logout, currentUser } = useSession();
   const router = useRouter();
   const [requests, setRequests] = useState<JobRequest[]>([]);
-  const anims = useRef(Array.from({ length: 5 }, () => new Animated.Value(0))).current;
-
-  useEffect(() => {
-    Animated.stagger(
-      120,
-      anims.map((anim) =>
-        Animated.timing(anim, {
-          toValue: 1,
-          duration: 520,
-          useNativeDriver: true
-        })
-      )
-    ).start();
-  }, [anims]);
 
   const loadRequests = async () => {
     if (!currentUser) return;
@@ -51,21 +28,9 @@ export default function Home() {
     return undefined;
   });
 
-  const enter = (index: number) => ({
-    opacity: anims[index],
-    transform: [
-      {
-        translateY: anims[index].interpolate({
-          inputRange: [0, 1],
-          outputRange: [18, 0]
-        })
-      }
-    ]
-  });
-
   return (
     <View style={styles.root}>
-      <GradientBackdrop />
+      <View style={styles.accentBand} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.topBar}>
           <Text style={styles.roleText}>{currentUser?.role ?? "UNKNOWN"}</Text>
@@ -74,108 +39,52 @@ export default function Home() {
           </PillButton>
         </View>
 
-        <Animated.View style={[styles.hero, enter(0)]}>
-          <Text style={styles.kicker}>EXPO + REACT NATIVE</Text>
-          <Text style={styles.title}>Seeker Home</Text>
-          <Text style={styles.subtitle}>
-            Мои заявки и быстрые действия для SEEKER.
-          </Text>
-          <View style={styles.heroActions}>
-            <PillButton onPress={() => router.push("/(seeker)/request-create-edit")}>
-              Создать заявку
-            </PillButton>
-          </View>
-        </Animated.View>
+        <View style={styles.hero}>
+          <Text style={styles.kicker}>SEEKER</Text>
+          <Text style={styles.title}>Мои заявки</Text>
+          <Text style={styles.subtitle}>Создавайте заявки и выбирайте лучший оффер.</Text>
+          <PillButton
+            onPress={() => router.push("/(seeker)/request-create-edit")}
+            style={styles.fullWidthButton}
+            textStyle={styles.fullWidthButtonText}
+          >
+            Создать заявку
+          </PillButton>
+        </View>
 
-        <Animated.View style={[styles.section, enter(1)]}>
-          <SectionHeader eyebrow="Requests" title="Мои заявки" />
-          <View style={styles.cardGrid}>
-            {requests.length === 0 ? (
-              <GlassCard style={styles.card}>
-                <Text style={styles.cardValue}>Пока нет заявок</Text>
-                <Text style={styles.cardDesc}>Создайте первую заявку, чтобы увидеть список.</Text>
-              </GlassCard>
-            ) : (
-              requests.map((request) => (
-                <GlassCard key={request.id} style={styles.card}>
-                  <Text style={styles.cardLabel}>{request.status}</Text>
-                  <Text style={styles.cardValue}>{request.title}</Text>
-                  <Text style={styles.cardDesc}>{request.description}</Text>
-                  <View style={styles.cardAction}>
-                    <PillButton
-                      tone="ghost"
-                      onPress={() =>
-                        router.push({
-                          pathname: "/(seeker)/request-details",
-                          params: { requestId: request.id }
-                        })
-                      }
-                    >
-                      Открыть
-                    </PillButton>
-                  </View>
-                </GlassCard>
-              ))
-            )}
-          </View>
-        </Animated.View>
-
-        <Animated.View style={[styles.section, enter(2)]}>
-          <SectionHeader eyebrow="Flow" title="Быстрые переходы" />
-          <View style={styles.cardGrid}>
-            <GlassCard style={styles.card}>
-              <Text style={styles.cardLabel}>Offers</Text>
-              <Text style={styles.cardValue}>Список откликов</Text>
-              <Text style={styles.cardDesc}>Откройте все предложения по заявкам.</Text>
-              <View style={styles.cardAction}>
-                <PillButton tone="ghost" onPress={() => router.push("/(seeker)/offers-list")}>
-                  Open
-                </PillButton>
-              </View>
-            </GlassCard>
-            <GlassCard style={styles.card}>
-              <Text style={styles.cardLabel}>Details</Text>
-              <Text style={styles.cardValue}>Карточка заявки</Text>
-              <Text style={styles.cardDesc}>Передаём requestId через params.</Text>
-              <View style={styles.cardAction}>
-                <PillButton
-                  tone="ghost"
-                  onPress={() =>
-                    router.push({ pathname: "/(seeker)/request-details", params: { requestId: "req_demo" } })
-                  }
-                >
-                  Open
-                </PillButton>
-              </View>
-            </GlassCard>
-          </View>
-        </Animated.View>
-
-        <Animated.View style={[styles.section, enter(3)]}>
-          <SectionHeader eyebrow="System" title="Стиль в деталях" />
-          <GlassCard>
-            <View style={styles.statRow}>
-              <View>
-                <Text style={styles.statValue}>12px</Text>
-                <Text style={styles.statLabel}>микро-ритм</Text>
-              </View>
-              <View>
-                <Text style={styles.statValue}>28px</Text>
-                <Text style={styles.statLabel}>радиус</Text>
-              </View>
-              <View>
-                <Text style={styles.statValue}>320ms</Text>
-                <Text style={styles.statLabel}>пружина</Text>
-              </View>
+        <View style={styles.section}>
+          {requests.length === 0 ? (
+            <View style={styles.card}>
+              <Text style={styles.cardValue}>Пока нет заявок</Text>
+              <Text style={styles.cardDesc}>Создайте первую заявку, чтобы увидеть список.</Text>
             </View>
-          </GlassCard>
-        </Animated.View>
-
-        <Animated.View style={[styles.section, enter(4)]}>
-          <Link href="/palette" style={styles.link}>
-            Открыть стайлгайд
-          </Link>
-        </Animated.View>
+          ) : (
+            requests.map((request) => (
+              <View key={request.id} style={styles.card}>
+                <View style={styles.badgeRow}>
+                  <View style={[styles.badge, badgeStyle(request.status)]}>
+                    <Text style={styles.badgeText}>{request.status}</Text>
+                  </View>
+                </View>
+                <Text style={styles.cardValue}>{request.title}</Text>
+                <Text style={styles.cardDesc}>{request.description}</Text>
+                <View style={styles.cardAction}>
+                  <PillButton
+                    tone="ghost"
+                    onPress={() =>
+                      router.push({
+                        pathname: "/(seeker)/request-details",
+                        params: { requestId: request.id }
+                      })
+                    }
+                  >
+                    Открыть
+                  </PillButton>
+                </View>
+              </View>
+            ))
+          )}
+        </View>
       </ScrollView>
     </View>
   );
@@ -186,11 +95,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.bg
   },
+  accentBand: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 180,
+    backgroundColor: colors.bgSoft
+  },
   content: {
     paddingHorizontal: spacing.xl,
     paddingTop: 48,
     paddingBottom: 80,
-    gap: spacing.xxl
+    gap: spacing.xl
   },
   topBar: {
     flexDirection: "row",
@@ -204,81 +121,100 @@ const styles = StyleSheet.create({
     letterSpacing: 2
   },
   hero: {
-    gap: spacing.md
+    padding: spacing.xl,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: colors.stroke,
+    backgroundColor: colors.surfaceStrong,
+    gap: spacing.sm
   },
   kicker: {
     fontFamily: type.bodyMedium,
-    color: colors.accentAltSoft,
-    letterSpacing: 3,
-    fontSize: 12
+    color: colors.accent,
+    letterSpacing: 2,
+    fontSize: 11,
+    textTransform: "uppercase"
   },
   title: {
-    fontFamily: type.display,
+    fontFamily: type.heading,
     color: colors.textPrimary,
-    fontSize: 42,
-    lineHeight: 46
+    fontSize: 24
   },
   subtitle: {
     fontFamily: type.body,
     color: colors.textSecondary,
-    fontSize: 15,
-    lineHeight: 22
-  },
-  heroActions: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: spacing.md,
-    marginTop: spacing.md
+    fontSize: 14,
+    lineHeight: 20
   },
   section: {
-    gap: spacing.lg
-  },
-  cardGrid: {
     gap: spacing.md
   },
   card: {
-    borderRadius: radii.lg
+    padding: spacing.md,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.stroke,
+    backgroundColor: colors.surface
   },
   cardLabel: {
     fontFamily: type.bodyMedium,
     fontSize: 12,
-    color: colors.accentAltSoft,
+    color: colors.textSecondary,
     textTransform: "uppercase",
     letterSpacing: 2
   },
   cardValue: {
     fontFamily: type.heading,
-    fontSize: 20,
+    fontSize: 16,
     color: colors.textPrimary,
     marginTop: spacing.sm
   },
   cardDesc: {
     fontFamily: type.body,
-    fontSize: 14,
+    fontSize: 13,
     color: colors.textSecondary,
     marginTop: spacing.sm
   },
   cardAction: {
     marginTop: spacing.md
   },
-  statRow: {
-    flexDirection: "row",
-    justifyContent: "space-between"
+  fullWidthButton: {
+    alignSelf: "stretch",
+    justifyContent: "center"
   },
-  statValue: {
-    fontFamily: type.heading,
-    color: colors.textPrimary,
-    fontSize: 18
+  fullWidthButtonText: {
+    textAlign: "center"
   },
-  statLabel: {
-    fontFamily: type.body,
-    color: colors.textSecondary,
-    fontSize: 12,
-    marginTop: 4
+  badgeRow: {
+    flexDirection: "row"
   },
-  link: {
+  badge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
+    backgroundColor: colors.accentSoft
+  },
+  badgeText: {
     fontFamily: type.bodyMedium,
-    color: colors.accent,
-    fontSize: 15
+    fontSize: 11,
+    color: colors.textPrimary,
+    letterSpacing: 1
   }
 });
+
+const badgeStyle = (status: JobRequest["status"]) => {
+  switch (status) {
+    case "DRAFT":
+      return { backgroundColor: colors.accentSoft };
+    case "PUBLISHED":
+      return { backgroundColor: colors.accent, borderWidth: 0 };
+    case "ASSIGNED":
+    case "IN_PROGRESS":
+      return { backgroundColor: colors.accentAltSoft };
+    case "DONE":
+      return { backgroundColor: colors.success };
+    case "CANCELED":
+    default:
+      return { backgroundColor: colors.stroke };
+  }
+};

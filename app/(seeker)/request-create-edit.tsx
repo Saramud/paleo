@@ -136,11 +136,12 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.12)",
+    borderColor: colors.stroke,
     borderRadius: 12,
     padding: spacing.md,
     color: colors.textPrimary,
-    fontFamily: type.body
+    fontFamily: type.body,
+    backgroundColor: colors.surface
   },
   textarea: {
     minHeight: 120,

@@ -8,8 +8,13 @@ export default function RoleSelect() {
 
   return (
     <View style={styles.root}>
+      <View style={styles.accentBlob} />
       <View style={styles.card}>
-        <Text style={styles.title}>Choose your role</Text>
+        <Text style={styles.kicker}>KIDSOUT STYLE</Text>
+        <Text style={styles.title}>Выберите роль</Text>
+        <Text style={styles.subtitle}>
+          Минимальная сессия без регистрации. Можно переключаться в любой момент.
+        </Text>
         <View style={styles.actions}>
           <PillButton onPress={() => setRole("SEEKER")}>SEEKER</PillButton>
           <PillButton onPress={() => setRole("PROVIDER")} tone="ghost">
@@ -29,18 +34,45 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: spacing.xl
   },
+  accentBlob: {
+    position: "absolute",
+    width: 320,
+    height: 320,
+    borderRadius: 160,
+    backgroundColor: colors.accentSoft,
+    top: -140,
+    right: -120
+  },
   card: {
     width: "100%",
-    gap: spacing.lg
+    gap: spacing.md,
+    padding: spacing.xl,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: colors.stroke,
+    backgroundColor: colors.surfaceStrong
+  },
+  kicker: {
+    fontFamily: type.bodyMedium,
+    color: colors.accent,
+    letterSpacing: 2,
+    fontSize: 11,
+    textTransform: "uppercase"
   },
   title: {
     fontFamily: type.heading,
     color: colors.textPrimary,
-    fontSize: 20,
-    textAlign: "center"
+    fontSize: 24
+  },
+  subtitle: {
+    fontFamily: type.body,
+    color: colors.textSecondary,
+    fontSize: 14,
+    lineHeight: 20
   },
   actions: {
     gap: spacing.md,
-    alignItems: "center"
+    alignItems: "flex-start",
+    marginTop: spacing.sm
   }
 });

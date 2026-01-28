@@ -106,8 +106,8 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.12)",
-    backgroundColor: "rgba(255,255,255,0.06)",
+    borderColor: colors.stroke,
+    backgroundColor: colors.surface,
     gap: spacing.xs
   },
   cardTitle: {

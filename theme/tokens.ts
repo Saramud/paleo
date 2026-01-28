@@ -1,16 +1,16 @@
 export const colors = {
-  bg: "#0B0D10",
-  bgSoft: "#0F1A22",
-  surface: "rgba(255,255,255,0.08)",
-  surfaceStrong: "rgba(255,255,255,0.14)",
-  textPrimary: "#F7F7F2",
-  textSecondary: "#B8C0CC",
-  accent: "#FFB454",
-  accentSoft: "#FFD89C",
-  accentAlt: "#4DE4FF",
-  accentAltSoft: "#A8F3FF",
-  success: "#7BFF9B",
-  stroke: "rgba(255,255,255,0.12)"
+  bg: "#FFFFFF",
+  bgSoft: "#FFF6E9",
+  surface: "#FFFFFF",
+  surfaceStrong: "#FFF9F1",
+  textPrimary: "#1F2A37",
+  textSecondary: "#6B7280",
+  accent: "#FF7A00",
+  accentSoft: "#FFE3C2",
+  accentAlt: "#2F80ED",
+  accentAltSoft: "#CDE1FF",
+  success: "#22C55E",
+  stroke: "#F1E6D7"
 };
 
 export const spacing = {
@@ -38,10 +38,10 @@ export const type = {
 
 export const shadow = {
   soft: {
-    shadowColor: "#000",
-    shadowOpacity: 0.22,
+    shadowColor: "#3B2A1E",
+    shadowOpacity: 0.08,
     shadowRadius: 18,
     shadowOffset: { width: 0, height: 10 },
-    elevation: 6
+    elevation: 4
   }
 };

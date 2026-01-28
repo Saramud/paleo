@@ -72,6 +72,7 @@ export default function ProviderHome() {
 
   return (
     <View style={styles.root}>
+      <View style={styles.accentBand} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.topBar}>
           <Text style={styles.roleText}>{currentUser?.role ?? "UNKNOWN"}</Text>
@@ -80,19 +81,17 @@ export default function ProviderHome() {
           </PillButton>
         </View>
 
-        <Text style={styles.title}>Provider Home</Text>
-        <Text style={styles.subtitle}>Опубликованные заявки без вашего оффера.</Text>
-
-        <View style={styles.actionRow}>
+        <View style={styles.hero}>
+          <Text style={styles.kicker}>PROVIDER</Text>
+          <Text style={styles.title}>Доступные заявки</Text>
+          <Text style={styles.subtitle}>Только PUBLISHED и без ваших офферов.</Text>
           <PillButton
-            onPress={() =>
-              router.push({ pathname: "/(provider)/request-details", params: { requestId: "req_demo" } })
-            }
+            tone="ghost"
+            onPress={() => router.push("/(provider)/my-offers")}
+            style={styles.fullWidthButton}
+            textStyle={styles.fullWidthButtonText}
           >
-            Open request
-          </PillButton>
-          <PillButton tone="ghost" onPress={() => router.push("/(provider)/my-offers")}>
-            My offers
+            Мои офферы
           </PillButton>
         </View>
 
@@ -103,6 +102,11 @@ export default function ProviderHome() {
           ) : (
             requests.map((item) => (
               <View key={item.id} style={styles.card}>
+                <View style={styles.badgeRow}>
+                  <View style={[styles.badge, badgeStyle(item.status)]}>
+                    <Text style={styles.badgeText}>{item.status}</Text>
+                  </View>
+                </View>
                 <Text style={styles.cardTitle}>{item.title}</Text>
                 <Text style={styles.cardMeta}>{item.description}</Text>
                 <Text style={styles.cardMeta}>budget: {item.budget ?? "n/a"}</Text>
@@ -122,9 +126,9 @@ export default function ProviderHome() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Offers</Text>
+          <Text style={styles.sectionTitle}>My offers (preview)</Text>
           {offers.length === 0 ? (
-            <Text style={styles.empty}>No offers yet.</Text>
+            <Text style={styles.empty}>Нет отправленных офферов.</Text>
           ) : (
             offers.map((item) => (
               <View key={item.id} style={styles.card}>
@@ -146,6 +150,14 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
     justifyContent: "center"
   },
+  accentBand: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 180,
+    backgroundColor: colors.bgSoft
+  },
   content: {
     gap: spacing.lg,
     padding: spacing.xl
@@ -161,21 +173,32 @@ const styles = StyleSheet.create({
     fontSize: 12,
     letterSpacing: 2
   },
+  hero: {
+    padding: spacing.xl,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: colors.stroke,
+    backgroundColor: colors.surfaceStrong,
+    gap: spacing.sm
+  },
+  kicker: {
+    fontFamily: type.bodyMedium,
+    color: colors.accent,
+    letterSpacing: 2,
+    fontSize: 11,
+    textTransform: "uppercase"
+  },
   title: {
     fontFamily: type.heading,
     color: colors.textPrimary,
-    fontSize: 22
+    fontSize: 24
   },
   subtitle: {
     fontFamily: type.body,
     color: colors.textSecondary,
     fontSize: 14,
-    textAlign: "left"
-  },
-  actionRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: spacing.md
+    textAlign: "left",
+    lineHeight: 20
   },
   section: {
     gap: spacing.sm
@@ -195,8 +218,8 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.12)",
-    backgroundColor: "rgba(255,255,255,0.06)"
+    borderColor: colors.stroke,
+    backgroundColor: colors.surface
   },
   cardAction: {
     marginTop: spacing.sm
@@ -211,5 +234,44 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     fontSize: 12,
     marginTop: 4
+  },
+  fullWidthButton: {
+    alignSelf: "stretch",
+    justifyContent: "center"
+  },
+  fullWidthButtonText: {
+    textAlign: "center"
+  },
+  badgeRow: {
+    flexDirection: "row"
+  },
+  badge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
+    backgroundColor: colors.accentSoft
+  },
+  badgeText: {
+    fontFamily: type.bodyMedium,
+    fontSize: 11,
+    color: colors.textPrimary,
+    letterSpacing: 1
   }
 });
+
+const badgeStyle = (status: JobRequest["status"]) => {
+  switch (status) {
+    case "DRAFT":
+      return { backgroundColor: colors.accentSoft };
+    case "PUBLISHED":
+      return { backgroundColor: colors.accent };
+    case "ASSIGNED":
+    case "IN_PROGRESS":
+      return { backgroundColor: colors.accentAltSoft };
+    case "DONE":
+      return { backgroundColor: colors.success };
+    case "CANCELED":
+    default:
+      return { backgroundColor: colors.stroke };
+  }
+};

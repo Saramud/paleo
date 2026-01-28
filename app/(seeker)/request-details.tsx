@@ -92,7 +92,12 @@ const styles = StyleSheet.create({
     fontSize: 14
   },
   block: {
-    gap: spacing.sm
+    gap: spacing.sm,
+    padding: spacing.md,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.stroke,
+    backgroundColor: colors.surface
   },
   value: {
     fontFamily: type.heading,
