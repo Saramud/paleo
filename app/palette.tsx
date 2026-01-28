@@ -1,7 +1,9 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { GradientBackdrop } from "../components/GradientBackdrop";
 import { GlassCard } from "../components/GlassCard";
+import { PillButton } from "../components/PillButton";
 import { SectionHeader } from "../components/SectionHeader";
+import { useSession } from "../src/session/SessionContext";
 import { colors, spacing, type } from "../theme/tokens";
 
 const colorList = [
@@ -14,11 +16,20 @@ const colorList = [
 ];
 
 export default function Palette() {
+  const { currentUser, logout } = useSession();
+
   return (
     <View style={styles.root}>
       <GradientBackdrop />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <SectionHeader eyebrow="Styleguide" title="Цвет и типографика" />
+        <View style={styles.topBar}>
+          <Text style={styles.roleText}>{currentUser?.role ?? "UNKNOWN"}</Text>
+          <PillButton tone="ghost" onPress={logout}>
+            Logout
+          </PillButton>
+        </View>
+
+        <SectionHeader eyebrow="Styleguide" title="Р¦РІРµС‚ Рё С‚РёРїРѕРіСЂР°С„РёРєР°" />
 
         <GlassCard>
           <View style={styles.block}>
@@ -28,7 +39,7 @@ export default function Palette() {
           <View style={styles.block}>
             <Text style={styles.label}>Body</Text>
             <Text style={styles.body}>
-              Manrope 15. Быстрая оценка читаемости на нескольких строках для карточек.
+              Manrope 15. Р‘С‹СЃС‚СЂР°СЏ РѕС†РµРЅРєР° С‡РёС‚Р°РµРјРѕСЃС‚Рё РЅР° РЅРµСЃРєРѕР»СЊРєРёС… СЃС‚СЂРѕРєР°С… РґР»СЏ РєР°СЂС‚РѕС‡РµРє.
             </Text>
           </View>
         </GlassCard>
@@ -58,6 +69,17 @@ const styles = StyleSheet.create({
     paddingTop: 48,
     paddingBottom: 80,
     gap: spacing.xl
+  },
+  topBar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
+  roleText: {
+    fontFamily: type.bodyMedium,
+    color: colors.textSecondary,
+    fontSize: 12,
+    letterSpacing: 2
   },
   block: {
     marginBottom: spacing.lg
