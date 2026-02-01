@@ -1,4 +1,4 @@
-﻿import { useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import { PillButton } from "../components/PillButton";
 import { useSession } from "../src/session/SessionContext";
@@ -20,12 +20,12 @@ export default function Home() {
     <View style={styles.root}>
       <View style={styles.accentBlob} />
       <View style={styles.card}>
-        <Text style={styles.kicker}>KIDSOUT STYLE</Text>
+        <Text style={styles.kicker}>PallioHelp</Text>
         <Text style={styles.title}>Главная</Text>
         <Text style={styles.subtitle}>
-          Находите исполнителей, создавайте объявления и управляйте задачами в одном месте.
+          Находите специалистов по паллиативной помощи, создавайте запросы и управляйте уходом.
         </Text>
-        <PillButton onPress={handleExplore}>Перейти в витрину</PillButton>
+        <PillButton onPress={handleExplore}>Перейти к специалистам</PillButton>
       </View>
     </View>
   );

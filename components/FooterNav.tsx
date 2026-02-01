@@ -1,4 +1,4 @@
-﻿import { usePathname, useRouter } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSession } from "../src/session/SessionContext";
@@ -46,7 +46,7 @@ export function FooterNav() {
           <Text style={[styles.label, isHomeActive && styles.labelActive]}>Главная</Text>
         </Pressable>
         <Pressable style={styles.item} onPress={handleAnnouncement}>
-          <Text style={[styles.label, isAnnouncementActive && styles.labelActive]}>Объявление</Text>
+          <Text style={[styles.label, isAnnouncementActive && styles.labelActive]}>Запрос</Text>
         </Pressable>
         <Pressable style={styles.item} onPress={handleAuth}>
           <Text style={[styles.label, isAuthActive && styles.labelActive]}>

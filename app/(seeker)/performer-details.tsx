@@ -1,4 +1,4 @@
-﻿import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { PillButton } from "../../components/PillButton";
 import { performers } from "../../src/data/performers";
@@ -15,9 +15,9 @@ export default function PerformerDetails() {
         <View style={styles.accentBand} />
         <View style={styles.missingCard}>
           <Text style={styles.kicker}>ПРОФИЛЬ НЕ НАЙДЕН</Text>
-          <Text style={styles.title}>Такого исполнителя нет</Text>
+          <Text style={styles.title}>Такого специалиста нет</Text>
           <Text style={styles.subtitle}>Проверьте ссылку или вернитесь к витрине.</Text>
-          <PillButton onPress={() => router.push("/(seeker)")}>К витрине</PillButton>
+          <PillButton onPress={() => router.push("/(seeker)")}>К специалистам</PillButton>
           <PillButton tone="ghost" onPress={() => router.back()}>
             Назад
           </PillButton>
@@ -31,7 +31,7 @@ export default function PerformerDetails() {
       <View style={styles.accentBand} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.topBar}>
-          <Text style={styles.kicker}>ПРОФИЛЬ ИСПОЛНИТЕЛЯ</Text>
+          <Text style={styles.kicker}>PallioHelp</Text>
           <PillButton tone="ghost" onPress={() => router.back()}>
             Назад
           </PillButton>
@@ -44,19 +44,19 @@ export default function PerformerDetails() {
             <Text style={styles.subtitle}>{performer.title}</Text>
             <View style={styles.ratingRow}>
               <Text style={styles.ratingValue}>{performer.rating.toFixed(1)}</Text>
-              <Text style={styles.ratingMeta}>• {performer.reviews} отзывов</Text>
+              <Text style={styles.ratingMeta}>• {performer.reviews} рекомендаций</Text>
             </View>
             <Text style={styles.price}>{performer.price}</Text>
           </View>
         </View>
 
         <View style={styles.sectionCard}>
-          <Text style={styles.sectionTitle}>О себе</Text>
+          <Text style={styles.sectionTitle}>О специалисте</Text>
           <Text style={styles.sectionText}>{performer.about}</Text>
         </View>
 
         <View style={styles.sectionCard}>
-          <Text style={styles.sectionTitle}>Детали</Text>
+          <Text style={styles.sectionTitle}>Подход и опыт</Text>
           <View style={styles.metaRow}>
             <Text style={styles.metaText}>{performer.location}</Text>
             <View style={styles.dot} />
@@ -84,7 +84,7 @@ export default function PerformerDetails() {
               })
             }
           >
-            Написать
+            Написать специалисту
           </PillButton>
           <PillButton
             tone="ghost"
@@ -95,7 +95,7 @@ export default function PerformerDetails() {
               })
             }
           >
-            Пригласить на заявку
+            Пригласить к уходу
           </PillButton>
         </View>
       </ScrollView>

@@ -10,15 +10,15 @@ export default function RoleSelect() {
     <View style={styles.root}>
       <View style={styles.accentBlob} />
       <View style={styles.card}>
-        <Text style={styles.kicker}>KIDSOUT STYLE</Text>
+        <Text style={styles.kicker}>PallioHelp</Text>
         <Text style={styles.title}>Выберите роль</Text>
         <Text style={styles.subtitle}>
           Минимальная сессия без регистрации. Можно переключаться в любой момент.
         </Text>
         <View style={styles.actions}>
-          <PillButton onPress={() => setRole("SEEKER")}>SEEKER</PillButton>
+          <PillButton onPress={() => setRole("SEEKER")}>Нужна помощь</PillButton>
           <PillButton onPress={() => setRole("PROVIDER")} tone="ghost">
-            PROVIDER
+            Я специалист
           </PillButton>
         </View>
       </View>

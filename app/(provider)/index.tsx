@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
@@ -14,91 +14,97 @@ export default function ProviderHome() {
   const [requests, setRequests] = useState<JobRequest[]>([]);
   const [offers, setOffers] = useState<Offer[]>([]);
 
-  const loadData = async () => {
-      if (!currentUser) return;
+  const loadData = useCallback(async () => {
+    if (!currentUser) return;
 
-      const existingRequests = await mockStore.jobRequests.list();
-      if (existingRequests.length === 0) {
-        await mockStore.jobRequests.create({
-          title: "Fix kitchen sink",
-          description: "Leaking faucet, need quick repair.",
-          budget: 80,
-          locationText: "Downtown",
-          seekerId: "seeker_demo",
-          status: "PUBLISHED"
-        });
-        await mockStore.jobRequests.create({
-          title: "Assemble IKEA desk",
-          description: "Need assembly this weekend.",
-          budget: 120,
-          locationText: "Midtown",
-          seekerId: "seeker_demo",
-          status: "PUBLISHED"
-        });
-        await mockStore.jobRequests.create({
-          title: "Paint living room",
-          description: "Two walls, light color.",
-          budget: 200,
-          locationText: "Uptown",
-          seekerId: "seeker_demo",
-          status: "DRAFT"
-        });
-      }
+    const existingRequests = await mockStore.jobRequests.list();
+    if (existingRequests.length === 0) {
+      await mockStore.jobRequests.create({
+        title: "Круглосуточный уход",
+        description: "Нужна сиделка на ночь, контроль боли и помощь семье.",
+        budget: 3200,
+        locationText: "ЮВАО",
+        seekerId: "seeker_demo",
+        status: "PUBLISHED"
+      });
+      await mockStore.jobRequests.create({
+        title: "Патронаж 3 раза в неделю",
+        description: "Гигиенический уход, питание, упражнения.",
+        budget: 1800,
+        locationText: "СЗАО",
+        seekerId: "seeker_demo",
+        status: "PUBLISHED"
+      });
+      await mockStore.jobRequests.create({
+        title: "Психологическая поддержка семьи",
+        description: "Нужны консультации по адаптации и выгоранию.",
+        budget: 2500,
+        locationText: "ЦАО",
+        seekerId: "seeker_demo",
+        status: "DRAFT"
+      });
+    }
 
-      const allRequests = await mockStore.jobRequests.list();
-      const allOffers = await mockStore.offers.list();
+    const allRequests = await mockStore.jobRequests.list();
+    const allOffers = await mockStore.offers.list();
 
-      setOffers(allOffers.filter((offer) => offer.providerId === currentUser.id));
+    setOffers(allOffers.filter((offer) => offer.providerId === currentUser.id));
 
-      const offeredRequestIds = new Set(
-        allOffers.filter((offer) => offer.providerId === currentUser.id).map((offer) => offer.requestId)
-      );
+    const offeredRequestIds = new Set(
+      allOffers
+        .filter((offer) => offer.providerId === currentUser.id)
+        .map((offer) => offer.requestId)
+    );
 
-      setRequests(
-        allRequests.filter(
-          (request) => request.status === "PUBLISHED" && !offeredRequestIds.has(request.id)
-        )
-      );
-  };
+    setRequests(
+      allRequests.filter(
+        (request) => request.status === "PUBLISHED" && !offeredRequestIds.has(request.id)
+      )
+    );
+  }, [currentUser]);
 
   useEffect(() => {
     loadData();
-  }, [currentUser]);
+  }, [loadData]);
 
-  useFocusEffect(() => {
-    loadData();
-    return undefined;
-  });
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+      return undefined;
+    }, [loadData])
+  );
 
   return (
     <View style={styles.root}>
       <View style={styles.accentBand} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.topBar}>
-          <Text style={styles.roleText}>{currentUser?.role ?? "UNKNOWN"}</Text>
+          <Text style={styles.roleText}>PallioHelp · Специалист</Text>
           <PillButton tone="ghost" onPress={logout}>
-            Logout
+            Выйти
           </PillButton>
         </View>
 
         <View style={styles.hero}>
-          <Text style={styles.kicker}>PROVIDER</Text>
-          <Text style={styles.title}>Доступные заявки</Text>
-          <Text style={styles.subtitle}>Только PUBLISHED и без ваших офферов.</Text>
+          <Text style={styles.kicker}>PallioHelp</Text>
+          <Text style={styles.title}>Запросы на помощь</Text>
+          <Text style={styles.subtitle}>
+            Просматривайте запросы семей и отправляйте предложения по уходу.
+          </Text>
           <PillButton
             tone="ghost"
             onPress={() => router.push("/(provider)/my-offers")}
             style={styles.fullWidthButton}
             textStyle={styles.fullWidthButtonText}
           >
-            Мои офферы
+            Мои предложения
           </PillButton>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Requests</Text>
+          <Text style={styles.sectionTitle}>Запросы</Text>
           {requests.length === 0 ? (
-            <Text style={styles.empty}>Нет заявок для отклика.</Text>
+            <Text style={styles.empty}>Нет запросов для отклика.</Text>
           ) : (
             requests.map((item) => (
               <View key={item.id} style={styles.card}>
@@ -109,12 +115,15 @@ export default function ProviderHome() {
                 </View>
                 <Text style={styles.cardTitle}>{item.title}</Text>
                 <Text style={styles.cardMeta}>{item.description}</Text>
-                <Text style={styles.cardMeta}>budget: {item.budget ?? "n/a"}</Text>
+                <Text style={styles.cardMeta}>бюджет: {item.budget ?? "н/д"} ₽</Text>
                 <View style={styles.cardAction}>
                   <PillButton
                     tone="ghost"
                     onPress={() =>
-                      router.push({ pathname: "/(provider)/request-details", params: { requestId: item.id } })
+                      router.push({
+                        pathname: "/(provider)/request-details",
+                        params: { requestId: item.id }
+                      })
                     }
                   >
                     Открыть
@@ -126,13 +135,13 @@ export default function ProviderHome() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>My offers (preview)</Text>
+          <Text style={styles.sectionTitle}>Мои предложения (превью)</Text>
           {offers.length === 0 ? (
-            <Text style={styles.empty}>Нет отправленных офферов.</Text>
+            <Text style={styles.empty}>Нет отправленных предложений.</Text>
           ) : (
             offers.map((item) => (
               <View key={item.id} style={styles.card}>
-                <Text style={styles.cardTitle}>{item.message ?? "Offer"}</Text>
+                <Text style={styles.cardTitle}>{item.message ?? "Предложение"}</Text>
                 <Text style={styles.cardMeta}>{item.status}</Text>
               </View>
             ))

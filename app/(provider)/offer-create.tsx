@@ -34,31 +34,31 @@ export default function OfferCreate() {
 
   return (
     <View style={styles.root}>
-      <Text style={styles.title}>Offer Create</Text>
-      <Text style={styles.meta}>requestId: {requestId ?? "missing"}</Text>
+      <Text style={styles.title}>Предложение по уходу</Text>
+      <Text style={styles.meta}>ID �������: {requestId ?? "���"}</Text>
       <View style={styles.field}>
-        <Text style={styles.label}>Price</Text>
+        <Text style={styles.label}>Стоимость</Text>
         <TextInput
           value={price}
           onChangeText={setPrice}
-          placeholder="100"
+          placeholder="2500"
           placeholderTextColor={colors.textSecondary}
           keyboardType="numeric"
           style={styles.input}
         />
       </View>
       <View style={styles.field}>
-        <Text style={styles.label}>Message</Text>
+        <Text style={styles.label}>Комментарий</Text>
         <TextInput
           value={message}
           onChangeText={setMessage}
-          placeholder="Short note"
+          placeholder="Опыт, график, условия"
           placeholderTextColor={colors.textSecondary}
           style={[styles.input, styles.textarea]}
           multiline
         />
       </View>
-      <PillButton onPress={handleSend}>Send offer</PillButton>
+      <PillButton onPress={handleSend}>Отправить предложение</PillButton>
     </View>
   );
 }

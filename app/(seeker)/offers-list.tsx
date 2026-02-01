@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { PillButton } from "../../components/PillButton";
@@ -16,22 +16,24 @@ export default function OffersList() {
   const [offers, setOffers] = useState<Offer[]>([]);
   const [request, setRequest] = useState<JobRequest | null>(null);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     if (!requestId) return;
     const allOffers = await mockStore.offers.list();
     setOffers(allOffers.filter((offer) => offer.requestId === String(requestId)));
     const req = await mockStore.jobRequests.get(String(requestId));
     setRequest(req);
-  };
+  }, [requestId]);
 
   useEffect(() => {
     loadData();
-  }, [requestId]);
+  }, [loadData]);
 
-  useFocusEffect(() => {
-    loadData();
-    return undefined;
-  });
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+      return undefined;
+    }, [loadData])
+  );
 
   const handleAccept = async (offerId: string) => {
     if (!requestId) return;
@@ -59,23 +61,21 @@ export default function OffersList() {
 
   return (
     <View style={styles.root}>
-      <Text style={styles.title}>Offers List</Text>
-      <Text style={styles.meta}>requestId: {requestId ?? "all"}</Text>
-      {request ? (
-        <Text style={styles.meta}>request status: {request.status}</Text>
-      ) : null}
+      <Text style={styles.title}>Предложения по запросу</Text>
+      <Text style={styles.meta}>ID �������: {requestId ?? "���"}</Text>
+      {request ? <Text style={styles.meta}>статус: {request.status}</Text> : null}
       {offers.length === 0 ? (
-        <Text style={styles.meta}>Офферов пока нет.</Text>
+        <Text style={styles.meta}>Пока нет предложений.</Text>
       ) : (
         offers.map((offer) => (
           <View key={offer.id} style={styles.card}>
-            <Text style={styles.cardTitle}>providerId: {offer.providerId}</Text>
-            <Text style={styles.meta}>price: {offer.price ?? "n/a"}</Text>
-            <Text style={styles.meta}>message: {offer.message ?? "-"}</Text>
-            <Text style={styles.meta}>status: {offer.status}</Text>
+            <Text style={styles.cardTitle}>специалист: {offer.providerId}</Text>
+            <Text style={styles.meta}>стоимость: {offer.price ?? "н/д"} ₽</Text>
+            <Text style={styles.meta}>сообщение: {offer.message ?? "-"}</Text>
+            <Text style={styles.meta}>статус: {offer.status}</Text>
             {request?.status === "PUBLISHED" && offer.status === "SENT" ? (
               <View style={styles.cardAction}>
-                <PillButton onPress={() => handleAccept(offer.id)}>Принять</PillButton>
+                <PillButton onPress={() => handleAccept(offer.id)}>Принять предложение</PillButton>
               </View>
             ) : null}
           </View>

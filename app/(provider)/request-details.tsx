@@ -41,26 +41,26 @@ export default function RequestDetails() {
 
   return (
     <View style={styles.root}>
-      <Text style={styles.title}>Request Details</Text>
-      <Text style={styles.meta}>requestId: {requestId ?? "missing"}</Text>
+      <Text style={styles.title}>Детали запроса</Text>
+      <Text style={styles.meta}>ID �������: {requestId ?? "���"}</Text>
       {request ? (
         <View style={styles.block}>
           <Text style={styles.value}>{request.title}</Text>
           <Text style={styles.meta}>{request.description}</Text>
-          <Text style={styles.meta}>status: {request.status}</Text>
-          {request.budget ? <Text style={styles.meta}>budget: {request.budget}</Text> : null}
+          <Text style={styles.meta}>статус: {request.status}</Text>
+          {request.budget ? <Text style={styles.meta}>бюджет: {request.budget} ₽</Text> : null}
           {request.locationText ? (
-            <Text style={styles.meta}>location: {request.locationText}</Text>
+            <Text style={styles.meta}>локация: {request.locationText}</Text>
           ) : null}
         </View>
       ) : (
-        <Text style={styles.meta}>Заявка не найдена.</Text>
+        <Text style={styles.meta}>Запрос не найден.</Text>
       )}
       <PillButton
         tone="ghost"
         onPress={() => router.push({ pathname: "/(provider)/offer-create", params: { requestId } })}
       >
-        Откликнуться
+        Отправить предложение
       </PillButton>
       {currentUser?.role === "PROVIDER" && request?.status === "ASSIGNED" ? (
         <PillButton onPress={() => handleTransition("IN_PROGRESS")}>В работу</PillButton>

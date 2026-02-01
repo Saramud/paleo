@@ -2,10 +2,7 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import { Manrope_400Regular, Manrope_500Medium } from "@expo-google-fonts/manrope";
-import {
-  SpaceGrotesk_500Medium,
-  SpaceGrotesk_600SemiBold
-} from "@expo-google-fonts/space-grotesk";
+import { SpaceGrotesk_500Medium, SpaceGrotesk_600SemiBold } from "@expo-google-fonts/space-grotesk";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StyleSheet, View } from "react-native";
 import { SessionProvider } from "../src/session/SessionContext";

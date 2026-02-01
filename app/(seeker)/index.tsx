@@ -1,4 +1,4 @@
-﻿import { useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { PillButton } from "../../components/PillButton";
 import { performers } from "../../src/data/performers";
@@ -8,30 +8,31 @@ import { colors, radii, shadow, spacing, type } from "../../theme/tokens";
 export default function Home() {
   const { logout, currentUser } = useSession();
   const router = useRouter();
+  const roleLabel = currentUser?.role === "SEEKER" ? "Нужна помощь" : "Специалист";
 
   return (
     <View style={styles.root}>
       <View style={styles.accentBand} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.topBar}>
-          <Text style={styles.roleText}>{currentUser?.role ?? "UNKNOWN"}</Text>
+          <Text style={styles.roleText}>PallioHelp · {roleLabel}</Text>
           <PillButton tone="ghost" onPress={logout}>
-            Logout
+            Выйти
           </PillButton>
         </View>
 
         <View style={styles.hero}>
-          <Text style={styles.kicker}>SEEKER</Text>
-          <Text style={styles.title}>Витрина исполнителей</Text>
+          <Text style={styles.kicker}>PallioHelp</Text>
+          <Text style={styles.title}>Паллиативная помощь рядом</Text>
           <Text style={styles.subtitle}>
-            Подберите специалиста под задачу или создайте заявку за минуту.
+            Подберите специалиста по уходу и поддержке или создайте запрос на помощь.
           </Text>
           <PillButton
             onPress={() => router.push("/(seeker)/request-create-edit")}
             style={styles.fullWidthButton}
             textStyle={styles.fullWidthButtonText}
           >
-            Создать заявку
+            Создать запрос
           </PillButton>
         </View>
 
@@ -56,14 +57,14 @@ export default function Home() {
               }
             >
               <View style={styles.cardHeader}>
-                <Image source={{ uri: performer.image }} style={styles.avatarImage} />
+                <Image source={performer.image} style={styles.avatarImage} />
                 <View style={styles.cardHeaderInfo}>
                   <Text style={styles.cardTitle}>{performer.name}</Text>
                   <Text style={styles.cardMeta}>{performer.title}</Text>
                 </View>
                 <View style={styles.ratingPill}>
                   <Text style={styles.ratingValue}>{performer.rating.toFixed(1)}</Text>
-                  <Text style={styles.ratingCount}>• {performer.reviews}</Text>
+                  <Text style={styles.ratingCount}>• {performer.reviews} рекомендаций</Text>
                 </View>
               </View>
 
@@ -304,4 +305,4 @@ const styles = StyleSheet.create({
   }
 });
 
-const FILTERS = ["Рядом", "Высокий рейтинг", "Сегодня", "Детский опыт"];
+const FILTERS = ["Рядом", "С выездом", "Опыт с онко", "24/7"];

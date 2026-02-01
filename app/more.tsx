@@ -1,4 +1,4 @@
-﻿import { useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import { PillButton } from "../components/PillButton";
 import { useSession } from "../src/session/SessionContext";
@@ -11,9 +11,9 @@ export default function More() {
   return (
     <View style={styles.root}>
       <View style={styles.card}>
-        <Text style={styles.kicker}>ЕЩЁ</Text>
-        <Text style={styles.title}>Настройки</Text>
-        <Text style={styles.subtitle}>Управляйте сессией и быстрыми действиями.</Text>
+        <Text style={styles.kicker}>PallioHelp</Text>
+        <Text style={styles.title}>Ещё</Text>
+        <Text style={styles.subtitle}>Смена роли, чаты и настройки профиля.</Text>
         <View style={styles.actions}>
           {currentUser?.role === "SEEKER" && (
             <PillButton onPress={() => router.push("/(seeker)/chats")}>Чаты</PillButton>

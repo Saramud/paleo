@@ -1,5 +1,5 @@
-﻿import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useRouter } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { PillButton } from "../../components/PillButton";
 import { performers } from "../../src/data/performers";
@@ -21,7 +21,7 @@ export default function Chats() {
   const { currentUser } = useSession();
   const [threads, setThreads] = useState<ChatPreview[]>([]);
 
-  const loadThreads = async () => {
+  const loadThreads = useCallback(async () => {
     if (!currentUser) return;
     const threadItems = await mockStore.chats.listThreadsBySeeker(currentUser.id);
     const previews = await Promise.all(
@@ -39,17 +39,19 @@ export default function Chats() {
         };
       })
     );
-    setThreads(previews.sort((a, b) => ((a.lastMessageAt ?? "") > (b.lastMessageAt ?? "") ? -1 : 1)));
-  };
+    setThreads(
+      previews.sort((a, b) => ((a.lastMessageAt ?? "") > (b.lastMessageAt ?? "") ? -1 : 1))
+    );
+  }, [currentUser]);
 
   useEffect(() => {
     loadThreads();
-  }, [currentUser]);
+  }, [loadThreads]);
 
   return (
     <View style={styles.root}>
       <View style={styles.topBar}>
-        <Text style={styles.title}>Чаты</Text>
+        <Text style={styles.title}>Диалоги</Text>
         <PillButton tone="ghost" onPress={() => router.back()}>
           Назад
         </PillButton>
@@ -59,8 +61,8 @@ export default function Chats() {
         {threads.length === 0 ? (
           <View style={styles.emptyCard}>
             <Text style={styles.emptyTitle}>Пока нет переписок</Text>
-            <Text style={styles.emptyText}>Откройте профиль исполнителя и нажмите “Написать”.</Text>
-            <PillButton onPress={() => router.push("/(seeker)")}>Витрина</PillButton>
+            <Text style={styles.emptyText}>Откройте профиль специалиста и нажмите “Написать”.</Text>
+            <PillButton onPress={() => router.push("/(seeker)")}>Специалисты</PillButton>
           </View>
         ) : (
           threads.map((thread) => (
@@ -83,9 +85,7 @@ export default function Chats() {
                   <Text style={styles.badgeText}>Диалог</Text>
                 </View>
               </View>
-              <Text style={styles.cardMessage}>
-                {thread.lastMessage ?? "Нет сообщений"}
-              </Text>
+              <Text style={styles.cardMessage}>{thread.lastMessage ?? "Нет сообщений"}</Text>
             </Pressable>
           ))
         )}

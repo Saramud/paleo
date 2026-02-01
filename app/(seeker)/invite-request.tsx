@@ -1,5 +1,5 @@
-﻿import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { PillButton } from "../../components/PillButton";
 import type { JobRequest } from "../../src/domain/types";
@@ -16,15 +16,15 @@ export default function InviteRequest() {
   const [requests, setRequests] = useState<JobRequest[]>([]);
   const [sentRequestId, setSentRequestId] = useState<string | null>(null);
 
-  const loadRequests = async () => {
+  const loadRequests = useCallback(async () => {
     if (!currentUser) return;
     const all = await mockStore.jobRequests.list();
     setRequests(all.filter((item) => item.seekerId === currentUser.id));
-  };
+  }, [currentUser]);
 
   useEffect(() => {
     loadRequests();
-  }, [currentUser]);
+  }, [loadRequests]);
 
   const handleInvite = async (requestId: string) => {
     if (!currentUser || !performer) return;
@@ -39,7 +39,7 @@ export default function InviteRequest() {
   return (
     <View style={styles.root}>
       <View style={styles.topBar}>
-        <Text style={styles.title}>Пригласить на заявку</Text>
+        <Text style={styles.title}>Пригласить специалиста</Text>
         <PillButton tone="ghost" onPress={() => router.back()}>
           Назад
         </PillButton>
@@ -47,17 +47,17 @@ export default function InviteRequest() {
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.headerCard}>
-          <Text style={styles.kicker}>ИСПОЛНИТЕЛЬ</Text>
+          <Text style={styles.kicker}>СПЕЦИАЛИСТ</Text>
           <Text style={styles.headerName}>{performer.name}</Text>
           <Text style={styles.headerMeta}>{performer.title}</Text>
         </View>
 
         {requests.length === 0 ? (
           <View style={styles.emptyCard}>
-            <Text style={styles.emptyTitle}>Нет заявок</Text>
-            <Text style={styles.emptyText}>Создайте заявку, чтобы пригласить исполнителя.</Text>
+            <Text style={styles.emptyTitle}>Нет запросов</Text>
+            <Text style={styles.emptyText}>Создайте запрос, чтобы пригласить специалиста.</Text>
             <PillButton onPress={() => router.push("/(seeker)/request-create-edit")}>
-              Создать заявку
+              Создать запрос
             </PillButton>
           </View>
         ) : (
@@ -78,10 +78,7 @@ export default function InviteRequest() {
                   ]}
                 >
                   <Text
-                    style={[
-                      styles.badgeText,
-                      sentRequestId === request.id && styles.badgeTextSent
-                    ]}
+                    style={[styles.badgeText, sentRequestId === request.id && styles.badgeTextSent]}
                   >
                     {sentRequestId === request.id ? "Приглашение отправлено" : "Пригласить"}
                   </Text>

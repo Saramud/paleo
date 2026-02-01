@@ -1,4 +1,4 @@
-﻿import { useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import { PillButton } from "../components/PillButton";
 import { useSession } from "../src/session/SessionContext";
@@ -23,16 +23,16 @@ export default function Announcement() {
   return (
     <View style={styles.root}>
       <View style={styles.card}>
-        <Text style={styles.kicker}>ОБЪЯВЛЕНИЕ</Text>
-        <Text style={styles.title}>Разместите задачу</Text>
+        <Text style={styles.kicker}>PallioHelp</Text>
+        <Text style={styles.title}>Создайте запрос на уход</Text>
         <Text style={styles.subtitle}>
-          Коротко опишите задачу, и исполнители предложат свои условия.
+          Опишите потребности пациента, и специалисты предложат подход и график.
         </Text>
-        <PillButton onPress={handlePrimary}>Создать объявление</PillButton>
+        <PillButton onPress={handlePrimary}>Создать запрос</PillButton>
       </View>
       <View style={styles.note}>
         <Text style={styles.noteTitle}>Быстрые советы</Text>
-        <Text style={styles.noteText}>Добавьте срок, бюджет и формат работы.</Text>
+        <Text style={styles.noteText}>Укажите диагноз, режим ухода и предпочтения семьи.</Text>
       </View>
     </View>
   );

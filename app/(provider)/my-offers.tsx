@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { mockStore } from "../../src/data/mockStore";
@@ -10,32 +10,34 @@ export default function MyOffers() {
   const { currentUser } = useSession();
   const [offers, setOffers] = useState<Offer[]>([]);
 
-  const loadOffers = async () => {
+  const loadOffers = useCallback(async () => {
     if (!currentUser) return;
     const all = await mockStore.offers.list();
     setOffers(all.filter((offer) => offer.providerId === currentUser.id));
-  };
+  }, [currentUser]);
 
   useEffect(() => {
     loadOffers();
-  }, [currentUser]);
+  }, [loadOffers]);
 
-  useFocusEffect(() => {
-    loadOffers();
-    return undefined;
-  });
+  useFocusEffect(
+    useCallback(() => {
+      loadOffers();
+      return undefined;
+    }, [loadOffers])
+  );
 
   return (
     <View style={styles.root}>
-      <Text style={styles.title}>My Offers</Text>
+      <Text style={styles.title}>Мои предложения</Text>
       {offers.length === 0 ? (
-        <Text style={styles.meta}>Пока нет отправленных офферов.</Text>
+        <Text style={styles.meta}>Пока нет отправленных предложений.</Text>
       ) : (
         offers.map((offer) => (
           <View key={offer.id} style={styles.card}>
-            <Text style={styles.cardTitle}>{offer.message ?? "Offer"}</Text>
-            <Text style={styles.meta}>status: {offer.status}</Text>
-            {offer.price ? <Text style={styles.meta}>price: {offer.price}</Text> : null}
+            <Text style={styles.cardTitle}>{offer.message ?? "Предложение"}</Text>
+            <Text style={styles.meta}>статус: {offer.status}</Text>
+            {offer.price ? <Text style={styles.meta}>стоимость: {offer.price} ₽</Text> : null}
           </View>
         ))
       )}

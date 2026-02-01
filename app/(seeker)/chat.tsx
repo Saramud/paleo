@@ -1,5 +1,5 @@
-﻿import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { PillButton } from "../../components/PillButton";
 import { performers } from "../../src/data/performers";
@@ -23,17 +23,17 @@ export default function Chat() {
   const [messages, setMessages] = useState<ChatMessageItem[]>([]);
   const [text, setText] = useState("");
 
-  const loadThread = async () => {
+  const loadThread = useCallback(async () => {
     if (!currentUser || !performer) return;
     const thread = await mockStore.chats.ensureThread(currentUser.id, performer.id);
     setThreadId(thread.id);
     const data = await mockStore.chats.listMessages(thread.id);
     setMessages(data);
-  };
+  }, [currentUser, performer]);
 
   useEffect(() => {
     loadThread();
-  }, [currentUser, performer?.id]);
+  }, [loadThread]);
 
   const handleSend = async () => {
     if (!currentUser || !threadId || !text.trim()) return;
@@ -53,7 +53,7 @@ export default function Chat() {
           <Text style={styles.headerMeta}>{performer.title}</Text>
         </View>
         <View style={styles.statusPill}>
-          <Text style={styles.statusText}>онлайн</Text>
+          <Text style={styles.statusText}>доступен</Text>
         </View>
       </View>
 
@@ -61,7 +61,7 @@ export default function Chat() {
         {messages.length === 0 ? (
           <View style={styles.emptyCard}>
             <Text style={styles.emptyTitle}>Нет сообщений</Text>
-            <Text style={styles.emptyText}>Напишите первым, чтобы начать диалог.</Text>
+            <Text style={styles.emptyText}>Напишите первым, чтобы начать консультацию.</Text>
           </View>
         ) : (
           messages.map((message) => (
@@ -73,7 +73,9 @@ export default function Chat() {
               ]}
             >
               <Text style={styles.bubbleText}>{message.text}</Text>
-              <Text style={styles.bubbleMeta}>• {new Date(message.createdAt).toLocaleTimeString()}</Text>
+              <Text style={styles.bubbleMeta}>
+                • {new Date(message.createdAt).toLocaleTimeString()}
+              </Text>
             </View>
           ))
         )}
@@ -87,7 +89,11 @@ export default function Chat() {
           value={text}
           onChangeText={setText}
         />
-        <PillButton style={styles.sendButton} textStyle={styles.sendButtonText} onPress={handleSend}>
+        <PillButton
+          style={styles.sendButton}
+          textStyle={styles.sendButtonText}
+          onPress={handleSend}
+        >
           Отправить
         </PillButton>
       </View>

@@ -54,45 +54,45 @@ export default function RequestCreateEdit() {
 
   return (
     <View style={styles.root}>
-      <Text style={styles.title}>Request Create/Edit</Text>
+      <Text style={styles.title}>Создание запроса</Text>
       <View style={styles.field}>
-        <Text style={styles.label}>Title</Text>
+        <Text style={styles.label}>Краткий заголовок</Text>
         <TextInput
           value={title}
           onChangeText={setTitle}
-          placeholder="Short title"
+          placeholder="Например: ночной уход"
           placeholderTextColor={colors.textSecondary}
           style={styles.input}
         />
       </View>
       <View style={styles.field}>
-        <Text style={styles.label}>Description</Text>
+        <Text style={styles.label}>Описание потребностей</Text>
         <TextInput
           value={description}
           onChangeText={setDescription}
-          placeholder="Details"
+          placeholder="Диагноз, режим, требования"
           placeholderTextColor={colors.textSecondary}
           style={[styles.input, styles.textarea]}
           multiline
         />
       </View>
       <View style={styles.field}>
-        <Text style={styles.label}>Budget</Text>
+        <Text style={styles.label}>Бюджет</Text>
         <TextInput
           value={budget}
           onChangeText={setBudget}
-          placeholder="100"
+          placeholder="2000"
           placeholderTextColor={colors.textSecondary}
           keyboardType="numeric"
           style={styles.input}
         />
       </View>
       <View style={styles.field}>
-        <Text style={styles.label}>Location</Text>
+        <Text style={styles.label}>Локация</Text>
         <TextInput
           value={locationText}
           onChangeText={setLocationText}
-          placeholder="City / район"
+          placeholder="Город / район"
           placeholderTextColor={colors.textSecondary}
           style={styles.input}
         />
@@ -101,9 +101,7 @@ export default function RequestCreateEdit() {
         <PillButton tone="ghost" onPress={() => handleSave("DRAFT")}>
           Сохранить черновик
         </PillButton>
-        <PillButton onPress={() => handleSave("PUBLISHED")}>
-          Опубликовать
-        </PillButton>
+        <PillButton onPress={() => handleSave("PUBLISHED")}>Опубликовать</PillButton>
       </View>
     </View>
   );
