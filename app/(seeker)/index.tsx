@@ -1,32 +1,13 @@
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
+﻿import { useRouter } from "expo-router";
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { PillButton } from "../../components/PillButton";
-import type { JobRequest } from "../../src/domain/types";
-import { mockStore } from "../../src/data/mockStore";
+import { performers } from "../../src/data/performers";
 import { useSession } from "../../src/session/SessionContext";
-import { colors, spacing, type } from "../../theme/tokens";
+import { colors, radii, shadow, spacing, type } from "../../theme/tokens";
 
 export default function Home() {
   const { logout, currentUser } = useSession();
   const router = useRouter();
-  const [requests, setRequests] = useState<JobRequest[]>([]);
-
-  const loadRequests = async () => {
-    if (!currentUser) return;
-    const all = await mockStore.jobRequests.list();
-    setRequests(all.filter((item) => item.seekerId === currentUser.id));
-  };
-
-  useEffect(() => {
-    loadRequests();
-  }, [currentUser]);
-
-  useFocusEffect(() => {
-    loadRequests();
-    return undefined;
-  });
 
   return (
     <View style={styles.root}>
@@ -41,8 +22,10 @@ export default function Home() {
 
         <View style={styles.hero}>
           <Text style={styles.kicker}>SEEKER</Text>
-          <Text style={styles.title}>Мои заявки</Text>
-          <Text style={styles.subtitle}>Создавайте заявки и выбирайте лучший оффер.</Text>
+          <Text style={styles.title}>Витрина исполнителей</Text>
+          <Text style={styles.subtitle}>
+            Подберите специалиста под задачу или создайте заявку за минуту.
+          </Text>
           <PillButton
             onPress={() => router.push("/(seeker)/request-create-edit")}
             style={styles.fullWidthButton}
@@ -53,37 +36,63 @@ export default function Home() {
         </View>
 
         <View style={styles.section}>
-          {requests.length === 0 ? (
-            <View style={styles.card}>
-              <Text style={styles.cardValue}>Пока нет заявок</Text>
-              <Text style={styles.cardDesc}>Создайте первую заявку, чтобы увидеть список.</Text>
-            </View>
-          ) : (
-            requests.map((request) => (
-              <View key={request.id} style={styles.card}>
-                <View style={styles.badgeRow}>
-                  <View style={[styles.badge, badgeStyle(request.status)]}>
-                    <Text style={styles.badgeText}>{request.status}</Text>
-                  </View>
+          <View style={styles.filters}>
+            {FILTERS.map((item) => (
+              <View key={item} style={styles.filterChip}>
+                <Text style={styles.filterText}>{item}</Text>
+              </View>
+            ))}
+          </View>
+
+          {performers.map((performer) => (
+            <Pressable
+              key={performer.id}
+              style={styles.card}
+              onPress={() =>
+                router.push({
+                  pathname: "/(seeker)/performer-details",
+                  params: { performerId: performer.id }
+                })
+              }
+            >
+              <View style={styles.cardHeader}>
+                <Image source={{ uri: performer.image }} style={styles.avatarImage} />
+                <View style={styles.cardHeaderInfo}>
+                  <Text style={styles.cardTitle}>{performer.name}</Text>
+                  <Text style={styles.cardMeta}>{performer.title}</Text>
                 </View>
-                <Text style={styles.cardValue}>{request.title}</Text>
-                <Text style={styles.cardDesc}>{request.description}</Text>
-                <View style={styles.cardAction}>
-                  <PillButton
-                    tone="ghost"
-                    onPress={() =>
-                      router.push({
-                        pathname: "/(seeker)/request-details",
-                        params: { requestId: request.id }
-                      })
-                    }
-                  >
-                    Открыть
-                  </PillButton>
+                <View style={styles.ratingPill}>
+                  <Text style={styles.ratingValue}>{performer.rating.toFixed(1)}</Text>
+                  <Text style={styles.ratingCount}>• {performer.reviews}</Text>
                 </View>
               </View>
-            ))
-          )}
+
+              <Text style={styles.cardDesc}>{performer.about}</Text>
+
+              <View style={styles.metaRow}>
+                <Text style={styles.metaText}>{performer.location}</Text>
+                <View style={styles.dot} />
+                <Text style={styles.metaText}>{performer.experience}</Text>
+                <View style={styles.dot} />
+                <Text style={styles.metaText}>{performer.availability}</Text>
+              </View>
+
+              <View style={styles.tagRow}>
+                {performer.tags.map((tag) => (
+                  <View key={tag} style={styles.tag}>
+                    <Text style={styles.tagText}>{tag}</Text>
+                  </View>
+                ))}
+              </View>
+
+              <View style={styles.cardFooter}>
+                <Text style={styles.priceText}>{performer.price}</Text>
+                <View style={[styles.badge, styles.badgeAccent]}>
+                  <Text style={styles.badgeText}>{performer.badge}</Text>
+                </View>
+              </View>
+            </Pressable>
+          ))}
         </View>
       </ScrollView>
     </View>
@@ -149,34 +158,127 @@ const styles = StyleSheet.create({
   section: {
     gap: spacing.md
   },
-  card: {
-    padding: spacing.md,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.stroke,
-    backgroundColor: colors.surface
+  filters: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.sm
   },
-  cardLabel: {
+  filterChip: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: 999,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.stroke
+  },
+  filterText: {
     fontFamily: type.bodyMedium,
     fontSize: 12,
     color: colors.textSecondary,
     textTransform: "uppercase",
-    letterSpacing: 2
+    letterSpacing: 1
   },
-  cardValue: {
+  card: {
+    padding: spacing.md,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.stroke,
+    backgroundColor: colors.surface,
+    gap: spacing.sm,
+    ...shadow.soft
+  },
+  cardHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm
+  },
+  avatarImage: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: colors.accentSoft
+  },
+  cardHeaderInfo: {
+    flex: 1
+  },
+  cardTitle: {
     fontFamily: type.heading,
     fontSize: 16,
-    color: colors.textPrimary,
-    marginTop: spacing.sm
+    color: colors.textPrimary
+  },
+  cardMeta: {
+    fontFamily: type.body,
+    fontSize: 12,
+    color: colors.textSecondary,
+    marginTop: 2
+  },
+  ratingPill: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 999,
+    backgroundColor: colors.accentSoft
+  },
+  ratingValue: {
+    fontFamily: type.bodyMedium,
+    fontSize: 12,
+    color: colors.textPrimary
+  },
+  ratingCount: {
+    fontFamily: type.body,
+    fontSize: 12,
+    color: colors.textSecondary
   },
   cardDesc: {
     fontFamily: type.body,
     fontSize: 13,
     color: colors.textSecondary,
-    marginTop: spacing.sm
+    lineHeight: 18
   },
-  cardAction: {
-    marginTop: spacing.md
+  metaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6
+  },
+  metaText: {
+    fontFamily: type.bodyMedium,
+    fontSize: 11,
+    color: colors.textSecondary,
+    textTransform: "uppercase",
+    letterSpacing: 1
+  },
+  dot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: colors.stroke
+  },
+  tagRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.xs
+  },
+  tag: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 999,
+    backgroundColor: colors.surfaceStrong
+  },
+  tagText: {
+    fontFamily: type.bodyMedium,
+    fontSize: 11,
+    color: colors.textSecondary
+  },
+  cardFooter: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
+  priceText: {
+    fontFamily: type.heading,
+    fontSize: 14,
+    color: colors.textPrimary
   },
   fullWidthButton: {
     alignSelf: "stretch",
@@ -185,36 +287,21 @@ const styles = StyleSheet.create({
   fullWidthButtonText: {
     textAlign: "center"
   },
-  badgeRow: {
-    flexDirection: "row"
-  },
   badge: {
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 999,
     backgroundColor: colors.accentSoft
   },
+  badgeAccent: {
+    backgroundColor: colors.accent
+  },
   badgeText: {
     fontFamily: type.bodyMedium,
     fontSize: 11,
-    color: colors.textPrimary,
+    color: colors.surface,
     letterSpacing: 1
   }
 });
 
-const badgeStyle = (status: JobRequest["status"]) => {
-  switch (status) {
-    case "DRAFT":
-      return { backgroundColor: colors.accentSoft };
-    case "PUBLISHED":
-      return { backgroundColor: colors.accent, borderWidth: 0 };
-    case "ASSIGNED":
-    case "IN_PROGRESS":
-      return { backgroundColor: colors.accentAltSoft };
-    case "DONE":
-      return { backgroundColor: colors.success };
-    case "CANCELED":
-    default:
-      return { backgroundColor: colors.stroke };
-  }
-};
+const FILTERS = ["Рядом", "Высокий рейтинг", "Сегодня", "Детский опыт"];

@@ -37,3 +37,29 @@ export type Offer = {
   status: OfferStatus;
   createdAt: string;
 };
+
+export type ChatThread = {
+  id: string;
+  seekerId: string;
+  performerId: string;
+  lastMessageAt: string;
+};
+
+export type ChatMessage = {
+  id: string;
+  threadId: string;
+  senderId: string;
+  text: string;
+  createdAt: string;
+};
+
+export type InvitationStatus = "SENT" | "ACCEPTED" | "DECLINED";
+
+export type Invitation = {
+  id: string;
+  seekerId: string;
+  performerId: string;
+  requestId: string;
+  status: InvitationStatus;
+  createdAt: string;
+};

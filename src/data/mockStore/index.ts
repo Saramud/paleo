@@ -1,13 +1,26 @@
-import type { JobRequest, JobRequestStatus, Offer, Role, User } from "../../domain/types";
+import type {
+  ChatMessage,
+  ChatThread,
+  Invitation,
+  InvitationStatus,
+  JobRequest,
+  JobRequestStatus,
+  Offer,
+  Role,
+  User
+} from "../../domain/types";
 
-type Entity = User | JobRequest | Offer;
+type Entity = User | JobRequest | Offer | ChatThread | ChatMessage | Invitation;
 
 type Id = string;
 
 const store = {
   users: [] as User[],
   jobRequests: [] as JobRequest[],
-  offers: [] as Offer[]
+  offers: [] as Offer[],
+  chatThreads: [] as ChatThread[],
+  chatMessages: [] as ChatMessage[],
+  invitations: [] as Invitation[]
 };
 
 const delay = (ms = 120) =>
@@ -158,6 +171,81 @@ export const mockStore = {
       if (index === -1) return false;
       store.offers.splice(index, 1);
       return true;
+    }
+  },
+  chats: {
+    async listThreadsBySeeker(seekerId: Id) {
+      await delay();
+      return store.chatThreads.filter((thread) => thread.seekerId === seekerId).map(clone);
+    },
+    async getThreadById(id: Id) {
+      await delay();
+      const item = store.chatThreads.find((thread) => thread.id === id);
+      return item ? clone(item) : null;
+    },
+    async getThreadBySeekerAndPerformer(seekerId: Id, performerId: Id) {
+      await delay();
+      const item = store.chatThreads.find(
+        (thread) => thread.seekerId === seekerId && thread.performerId === performerId
+      );
+      return item ? clone(item) : null;
+    },
+    async ensureThread(seekerId: Id, performerId: Id) {
+      await delay();
+      const existing = store.chatThreads.find(
+        (thread) => thread.seekerId === seekerId && thread.performerId === performerId
+      );
+      if (existing) return clone(existing);
+      const thread: ChatThread = {
+        id: makeId("thr"),
+        seekerId,
+        performerId,
+        lastMessageAt: new Date().toISOString()
+      };
+      store.chatThreads.push(thread);
+      return clone(thread);
+    },
+    async listMessages(threadId: Id) {
+      await delay();
+      return store.chatMessages.filter((msg) => msg.threadId === threadId).map(clone);
+    },
+    async sendMessage(threadId: Id, senderId: Id, text: string) {
+      await delay();
+      const message: ChatMessage = {
+        id: makeId("msg"),
+        threadId,
+        senderId,
+        text,
+        createdAt: new Date().toISOString()
+      };
+      store.chatMessages.push(message);
+      const threadIndex = findIndexById(store.chatThreads, threadId);
+      if (threadIndex !== -1) {
+        store.chatThreads[threadIndex] = {
+          ...store.chatThreads[threadIndex],
+          lastMessageAt: message.createdAt
+        };
+      }
+      return clone(message);
+    }
+  },
+  invitations: {
+    async listBySeeker(seekerId: Id) {
+      await delay();
+      return store.invitations.filter((item) => item.seekerId === seekerId).map(clone);
+    },
+    async create(input: Omit<Invitation, "id" | "createdAt" | "status"> & { status?: InvitationStatus }) {
+      await delay();
+      const invitation: Invitation = {
+        id: makeId("inv"),
+        seekerId: input.seekerId,
+        performerId: input.performerId,
+        requestId: input.requestId,
+        status: input.status ?? "SENT",
+        createdAt: new Date().toISOString()
+      };
+      store.invitations.push(invitation);
+      return clone(invitation);
     }
   }
 };

@@ -1,4 +1,4 @@
-import { Stack, useRouter } from "expo-router";
+import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import { Manrope_400Regular, Manrope_500Medium } from "@expo-google-fonts/manrope";
@@ -7,8 +7,10 @@ import {
   SpaceGrotesk_600SemiBold
 } from "@expo-google-fonts/space-grotesk";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { useEffect } from "react";
-import { SessionProvider, useSession } from "../src/session/SessionContext";
+import { StyleSheet, View } from "react-native";
+import { SessionProvider } from "../src/session/SessionContext";
+import { FooterNav } from "../components/FooterNav";
+import { colors } from "../theme/tokens";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -33,27 +35,29 @@ export default function RootLayout() {
 }
 
 function RootNavigator() {
-  const { currentUser } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!currentUser) {
-      router.replace("/role-select");
-      return;
-    }
-    router.replace(currentUser.role === "SEEKER" ? "/(seeker)" : "/(provider)");
-  }, [currentUser, router]);
-
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      {currentUser ? (
-        <>
+    <View style={styles.root}>
+      <View style={styles.stack}>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="announcement" />
+          <Stack.Screen name="more" />
+          <Stack.Screen name="role-select" />
           <Stack.Screen name="(seeker)" />
           <Stack.Screen name="(provider)" />
-        </>
-      ) : (
-        <Stack.Screen name="role-select" />
-      )}
-    </Stack>
+        </Stack>
+      </View>
+      <FooterNav />
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: colors.bg
+  },
+  stack: {
+    flex: 1
+  }
+});
