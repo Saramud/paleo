@@ -1,43 +1,43 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { PillButton } from "../../components/PillButton";
-import { mockStore } from "../../src/data/mockStore";
-import type { JobRequest } from "../../src/domain/types";
-import { useSession } from "../../src/session/SessionContext";
-import { colors, spacing, type } from "../../theme/tokens";
+import { useLocalSearchParams, useRouter } from "expo-router"
+import { useEffect, useState } from "react"
+import { StyleSheet, Text, View } from "react-native"
+import { PillButton } from "../../components/PillButton"
+import { mockStore } from "../../src/data/mockStore"
+import type { JobRequest } from "../../src/domain/types"
+import { useSession } from "../../src/session/SessionContext"
+import { colors, spacing, type } from "../../theme/tokens"
 
 type Params = {
-  requestId?: string;
-};
+  requestId?: string
+}
 
 export default function RequestDetails() {
-  const router = useRouter();
-  const { requestId } = useLocalSearchParams<Params>();
-  const { currentUser } = useSession();
-  const [request, setRequest] = useState<JobRequest | null>(null);
+  const router = useRouter()
+  const { requestId } = useLocalSearchParams<Params>()
+  const { currentUser } = useSession()
+  const [request, setRequest] = useState<JobRequest | null>(null)
 
   useEffect(() => {
     const load = async () => {
-      if (!requestId) return;
-      const data = await mockStore.jobRequests.get(String(requestId));
-      setRequest(data);
-    };
+      if (!requestId) return
+      const data = await mockStore.jobRequests.get(String(requestId))
+      setRequest(data)
+    }
 
-    load();
-  }, [requestId]);
+    load()
+  }, [requestId])
 
   const handleTransition = async (nextStatus: "IN_PROGRESS" | "DONE") => {
-    if (!requestId || !currentUser) return;
+    if (!requestId || !currentUser) return
     const updated = await mockStore.jobRequests.transitionStatus(
       String(requestId),
       currentUser.role,
-      nextStatus
-    );
+      nextStatus,
+    )
     if (updated) {
-      setRequest(updated);
+      setRequest(updated)
     }
-  };
+  }
 
   return (
     <View style={styles.root}>
@@ -69,7 +69,7 @@ export default function RequestDetails() {
         <PillButton onPress={() => handleTransition("DONE")}>Завершить</PillButton>
       ) : null}
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -77,17 +77,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.bg,
     padding: spacing.xl,
-    gap: spacing.md
+    gap: spacing.md,
   },
   title: {
     fontFamily: type.heading,
     color: colors.textPrimary,
-    fontSize: 22
+    fontSize: 22,
   },
   meta: {
     fontFamily: type.body,
     color: colors.textSecondary,
-    fontSize: 14
+    fontSize: 14,
   },
   block: {
     gap: spacing.sm,
@@ -95,11 +95,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     borderColor: colors.stroke,
-    backgroundColor: colors.surface
+    backgroundColor: colors.surface,
   },
   value: {
     fontFamily: type.heading,
     color: colors.textPrimary,
-    fontSize: 18
-  }
-});
+    fontSize: 18,
+  },
+})

@@ -1,40 +1,40 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { PillButton } from "../../components/PillButton";
-import type { JobRequest } from "../../src/domain/types";
-import { performers } from "../../src/data/performers";
-import { mockStore } from "../../src/data/mockStore";
-import { useSession } from "../../src/session/SessionContext";
-import { colors, radii, shadow, spacing, type } from "../../theme/tokens";
+import { useLocalSearchParams, useRouter } from "expo-router"
+import { useCallback, useEffect, useState } from "react"
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native"
+import { PillButton } from "../../components/PillButton"
+import type { JobRequest } from "../../src/domain/types"
+import { performers } from "../../src/data/performers"
+import { mockStore } from "../../src/data/mockStore"
+import { useSession } from "../../src/session/SessionContext"
+import { colors, radii, shadow, spacing, type } from "../../theme/tokens"
 
 export default function InviteRequest() {
-  const router = useRouter();
-  const { performerId } = useLocalSearchParams<{ performerId?: string }>();
-  const { currentUser } = useSession();
-  const performer = performers.find((item) => item.id === performerId) ?? performers[0];
-  const [requests, setRequests] = useState<JobRequest[]>([]);
-  const [sentRequestId, setSentRequestId] = useState<string | null>(null);
+  const router = useRouter()
+  const { performerId } = useLocalSearchParams<{ performerId?: string }>()
+  const { currentUser } = useSession()
+  const performer = performers.find((item) => item.id === performerId) ?? performers[0]
+  const [requests, setRequests] = useState<JobRequest[]>([])
+  const [sentRequestId, setSentRequestId] = useState<string | null>(null)
 
   const loadRequests = useCallback(async () => {
-    if (!currentUser) return;
-    const all = await mockStore.jobRequests.list();
-    setRequests(all.filter((item) => item.seekerId === currentUser.id));
-  }, [currentUser]);
+    if (!currentUser) return
+    const all = await mockStore.jobRequests.list()
+    setRequests(all.filter((item) => item.seekerId === currentUser.id))
+  }, [currentUser])
 
   useEffect(() => {
-    loadRequests();
-  }, [loadRequests]);
+    loadRequests()
+  }, [loadRequests])
 
   const handleInvite = async (requestId: string) => {
-    if (!currentUser || !performer) return;
+    if (!currentUser || !performer) return
     await mockStore.invitations.create({
       seekerId: currentUser.id,
       performerId: performer.id,
-      requestId
-    });
-    setSentRequestId(requestId);
-  };
+      requestId,
+    })
+    setSentRequestId(requestId)
+  }
 
   return (
     <View style={styles.root}>
@@ -74,7 +74,7 @@ export default function InviteRequest() {
                 <View
                   style={[
                     styles.badge,
-                    sentRequestId === request.id ? styles.badgeSent : styles.badgeDefault
+                    sentRequestId === request.id ? styles.badgeSent : styles.badgeDefault,
                   ]}
                 >
                   <Text
@@ -89,13 +89,13 @@ export default function InviteRequest() {
         )}
       </ScrollView>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: colors.bg
+    backgroundColor: colors.bg,
   },
   topBar: {
     flexDirection: "row",
@@ -103,17 +103,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: spacing.xl,
     paddingTop: 48,
-    paddingBottom: spacing.md
+    paddingBottom: spacing.md,
   },
   title: {
     fontFamily: type.heading,
     fontSize: 20,
-    color: colors.textPrimary
+    color: colors.textPrimary,
   },
   content: {
     paddingHorizontal: spacing.xl,
     paddingBottom: 100,
-    gap: spacing.md
+    gap: spacing.md,
   },
   headerCard: {
     padding: spacing.md,
@@ -121,24 +121,24 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.stroke,
     backgroundColor: colors.surfaceStrong,
-    gap: spacing.xs
+    gap: spacing.xs,
   },
   kicker: {
     fontFamily: type.bodyMedium,
     fontSize: 11,
     color: colors.accent,
     textTransform: "uppercase",
-    letterSpacing: 2
+    letterSpacing: 2,
   },
   headerName: {
     fontFamily: type.heading,
     fontSize: 16,
-    color: colors.textPrimary
+    color: colors.textPrimary,
   },
   headerMeta: {
     fontFamily: type.body,
     fontSize: 12,
-    color: colors.textSecondary
+    color: colors.textSecondary,
   },
   emptyCard: {
     padding: spacing.xl,
@@ -146,18 +146,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.stroke,
     backgroundColor: colors.surfaceStrong,
-    gap: spacing.md
+    gap: spacing.md,
   },
   emptyTitle: {
     fontFamily: type.heading,
     fontSize: 18,
-    color: colors.textPrimary
+    color: colors.textPrimary,
   },
   emptyText: {
     fontFamily: type.body,
     fontSize: 13,
     color: colors.textSecondary,
-    lineHeight: 18
+    lineHeight: 18,
   },
   card: {
     padding: spacing.md,
@@ -166,48 +166,48 @@ const styles = StyleSheet.create({
     borderColor: colors.stroke,
     backgroundColor: colors.surface,
     gap: spacing.sm,
-    ...shadow.soft
+    ...shadow.soft,
   },
   cardTitle: {
     fontFamily: type.heading,
     fontSize: 15,
-    color: colors.textPrimary
+    color: colors.textPrimary,
   },
   cardDesc: {
     fontFamily: type.body,
     fontSize: 12,
     color: colors.textSecondary,
-    lineHeight: 17
+    lineHeight: 17,
   },
   cardFooter: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
   cardMeta: {
     fontFamily: type.bodyMedium,
     fontSize: 11,
     color: colors.textSecondary,
     textTransform: "uppercase",
-    letterSpacing: 1
+    letterSpacing: 1,
   },
   badge: {
     paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 999
+    borderRadius: 999,
   },
   badgeDefault: {
-    backgroundColor: colors.accent
+    backgroundColor: colors.accent,
   },
   badgeSent: {
-    backgroundColor: colors.accentSoft
+    backgroundColor: colors.accentSoft,
   },
   badgeText: {
     fontFamily: type.bodyMedium,
     fontSize: 11,
-    color: colors.surface
+    color: colors.surface,
   },
   badgeTextSent: {
-    color: colors.textPrimary
-  }
-});
+    color: colors.textPrimary,
+  },
+})

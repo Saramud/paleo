@@ -1,24 +1,24 @@
-import { useRouter } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
-import { PillButton } from "../components/PillButton";
-import { useSession } from "../src/session/SessionContext";
-import { colors, spacing, type } from "../theme/tokens";
+import { useRouter } from "expo-router"
+import { StyleSheet, Text, View } from "react-native"
+import { PillButton } from "../components/PillButton"
+import { useSession } from "../src/session/SessionContext"
+import { colors, spacing, type } from "../theme/tokens"
 
 export default function Announcement() {
-  const router = useRouter();
-  const { currentUser } = useSession();
+  const router = useRouter()
+  const { currentUser } = useSession()
 
   const handlePrimary = () => {
     if (!currentUser) {
-      router.push("/role-select");
-      return;
+      router.push("/role-select")
+      return
     }
     if (currentUser.role === "SEEKER") {
-      router.push("/(seeker)/request-create-edit");
-      return;
+      router.push("/(seeker)/request-create-edit")
+      return
     }
-    router.push("/(provider)");
-  };
+    router.push("/(provider)")
+  }
 
   return (
     <View style={styles.root}>
@@ -35,7 +35,7 @@ export default function Announcement() {
         <Text style={styles.noteText}>Укажите диагноз, режим ухода и предпочтения семьи.</Text>
       </View>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.bg,
     padding: spacing.xl,
-    gap: spacing.lg
+    gap: spacing.lg,
   },
   card: {
     gap: spacing.md,
@@ -51,44 +51,44 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     borderWidth: 1,
     borderColor: colors.stroke,
-    backgroundColor: colors.surfaceStrong
+    backgroundColor: colors.surfaceStrong,
   },
   kicker: {
     fontFamily: type.bodyMedium,
     color: colors.accent,
     letterSpacing: 2,
     fontSize: 11,
-    textTransform: "uppercase"
+    textTransform: "uppercase",
   },
   title: {
     fontFamily: type.heading,
     color: colors.textPrimary,
-    fontSize: 24
+    fontSize: 24,
   },
   subtitle: {
     fontFamily: type.body,
     color: colors.textSecondary,
     fontSize: 14,
-    lineHeight: 20
+    lineHeight: 20,
   },
   note: {
     padding: spacing.md,
     borderRadius: 16,
     borderWidth: 1,
     borderColor: colors.stroke,
-    backgroundColor: colors.surface
+    backgroundColor: colors.surface,
   },
   noteTitle: {
     fontFamily: type.bodyMedium,
     fontSize: 12,
     color: colors.textPrimary,
     textTransform: "uppercase",
-    letterSpacing: 1
+    letterSpacing: 1,
   },
   noteText: {
     fontFamily: type.body,
     fontSize: 13,
     color: colors.textSecondary,
-    marginTop: spacing.xs
-  }
-});
+    marginTop: spacing.xs,
+  },
+})

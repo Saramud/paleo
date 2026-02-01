@@ -1,63 +1,63 @@
-import { useLocalSearchParams } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
-import { PillButton } from "../../components/PillButton";
-import { mockStore } from "../../src/data/mockStore";
-import type { JobRequest, Offer } from "../../src/domain/types";
-import { colors, spacing, type } from "../../theme/tokens";
+import { useLocalSearchParams } from "expo-router"
+import { useCallback, useEffect, useState } from "react"
+import { StyleSheet, Text, View } from "react-native"
+import { useFocusEffect } from "@react-navigation/native"
+import { PillButton } from "../../components/PillButton"
+import { mockStore } from "../../src/data/mockStore"
+import type { JobRequest, Offer } from "../../src/domain/types"
+import { colors, spacing, type } from "../../theme/tokens"
 
 type Params = {
-  requestId?: string;
-};
+  requestId?: string
+}
 
 export default function OffersList() {
-  const { requestId } = useLocalSearchParams<Params>();
-  const [offers, setOffers] = useState<Offer[]>([]);
-  const [request, setRequest] = useState<JobRequest | null>(null);
+  const { requestId } = useLocalSearchParams<Params>()
+  const [offers, setOffers] = useState<Offer[]>([])
+  const [request, setRequest] = useState<JobRequest | null>(null)
 
   const loadData = useCallback(async () => {
-    if (!requestId) return;
-    const allOffers = await mockStore.offers.list();
-    setOffers(allOffers.filter((offer) => offer.requestId === String(requestId)));
-    const req = await mockStore.jobRequests.get(String(requestId));
-    setRequest(req);
-  }, [requestId]);
+    if (!requestId) return
+    const allOffers = await mockStore.offers.list()
+    setOffers(allOffers.filter((offer) => offer.requestId === String(requestId)))
+    const req = await mockStore.jobRequests.get(String(requestId))
+    setRequest(req)
+  }, [requestId])
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    loadData()
+  }, [loadData])
 
   useFocusEffect(
     useCallback(() => {
-      loadData();
-      return undefined;
-    }, [loadData])
-  );
+      loadData()
+      return undefined
+    }, [loadData]),
+  )
 
   const handleAccept = async (offerId: string) => {
-    if (!requestId) return;
-    const currentOffers = await mockStore.offers.list();
-    const target = currentOffers.find((item) => item.id === offerId);
-    if (!target) return;
+    if (!requestId) return
+    const currentOffers = await mockStore.offers.list()
+    const target = currentOffers.find((item) => item.id === offerId)
+    if (!target) return
 
     await Promise.all(
       currentOffers
         .filter((item) => item.requestId === String(requestId))
         .map((item) =>
           mockStore.offers.update(item.id, {
-            status: item.id === offerId ? "ACCEPTED" : "REJECTED"
-          })
-        )
-    );
+            status: item.id === offerId ? "ACCEPTED" : "REJECTED",
+          }),
+        ),
+    )
 
     await mockStore.jobRequests.update(String(requestId), {
       status: "ASSIGNED",
-      assignedProviderId: target.providerId
-    });
+      assignedProviderId: target.providerId,
+    })
 
-    await loadData();
-  };
+    await loadData()
+  }
 
   return (
     <View style={styles.root}>
@@ -82,7 +82,7 @@ export default function OffersList() {
         ))
       )}
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -90,17 +90,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.bg,
     padding: spacing.xl,
-    gap: spacing.md
+    gap: spacing.md,
   },
   title: {
     fontFamily: type.heading,
     color: colors.textPrimary,
-    fontSize: 22
+    fontSize: 22,
   },
   meta: {
     fontFamily: type.body,
     color: colors.textSecondary,
-    fontSize: 14
+    fontSize: 14,
   },
   card: {
     padding: spacing.md,
@@ -108,14 +108,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.stroke,
     backgroundColor: colors.surface,
-    gap: spacing.xs
+    gap: spacing.xs,
   },
   cardTitle: {
     fontFamily: type.bodyMedium,
     color: colors.textPrimary,
-    fontSize: 13
+    fontSize: 13,
   },
   cardAction: {
-    marginTop: spacing.sm
-  }
-});
+    marginTop: spacing.sm,
+  },
+})

@@ -1,31 +1,31 @@
-import { useCallback, useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
-import { mockStore } from "../../src/data/mockStore";
-import type { Offer } from "../../src/domain/types";
-import { useSession } from "../../src/session/SessionContext";
-import { colors, spacing, type } from "../../theme/tokens";
+import { useCallback, useEffect, useState } from "react"
+import { StyleSheet, Text, View } from "react-native"
+import { useFocusEffect } from "@react-navigation/native"
+import { mockStore } from "../../src/data/mockStore"
+import type { Offer } from "../../src/domain/types"
+import { useSession } from "../../src/session/SessionContext"
+import { colors, spacing, type } from "../../theme/tokens"
 
 export default function MyOffers() {
-  const { currentUser } = useSession();
-  const [offers, setOffers] = useState<Offer[]>([]);
+  const { currentUser } = useSession()
+  const [offers, setOffers] = useState<Offer[]>([])
 
   const loadOffers = useCallback(async () => {
-    if (!currentUser) return;
-    const all = await mockStore.offers.list();
-    setOffers(all.filter((offer) => offer.providerId === currentUser.id));
-  }, [currentUser]);
+    if (!currentUser) return
+    const all = await mockStore.offers.list()
+    setOffers(all.filter((offer) => offer.providerId === currentUser.id))
+  }, [currentUser])
 
   useEffect(() => {
-    loadOffers();
-  }, [loadOffers]);
+    loadOffers()
+  }, [loadOffers])
 
   useFocusEffect(
     useCallback(() => {
-      loadOffers();
-      return undefined;
-    }, [loadOffers])
-  );
+      loadOffers()
+      return undefined
+    }, [loadOffers]),
+  )
 
   return (
     <View style={styles.root}>
@@ -42,7 +42,7 @@ export default function MyOffers() {
         ))
       )}
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -50,28 +50,28 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.bg,
     padding: spacing.xl,
-    gap: spacing.md
+    gap: spacing.md,
   },
   title: {
     fontFamily: type.heading,
     color: colors.textPrimary,
-    fontSize: 22
+    fontSize: 22,
   },
   meta: {
     fontFamily: type.body,
     color: colors.textSecondary,
-    fontSize: 14
+    fontSize: 14,
   },
   card: {
     padding: spacing.md,
     borderRadius: 12,
     borderWidth: 1,
     borderColor: colors.stroke,
-    backgroundColor: colors.surface
+    backgroundColor: colors.surface,
   },
   cardTitle: {
     fontFamily: type.bodyMedium,
     color: colors.textPrimary,
-    fontSize: 14
-  }
-});
+    fontSize: 14,
+  },
+})

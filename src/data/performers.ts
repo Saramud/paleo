@@ -1,20 +1,20 @@
-import type { ImageSourcePropType } from "react-native";
+import type { ImageSourcePropType } from "react-native"
 
 export type Performer = {
-  id: string;
-  name: string;
-  title: string;
-  rating: number;
-  reviews: number;
-  price: string;
-  location: string;
-  experience: string;
-  availability: string;
-  badge: string;
-  about: string;
-  tags: string[];
-  image: ImageSourcePropType;
-};
+  id: string
+  name: string
+  title: string
+  rating: number
+  reviews: number
+  price: string
+  location: string
+  experience: string
+  availability: string
+  badge: string
+  about: string
+  tags: string[]
+  image: ImageSourcePropType
+}
 
 export const performers: Performer[] = [
   {
@@ -30,7 +30,7 @@ export const performers: Performer[] = [
     badge: "Рекомендована",
     about: "Медицинский уход, контроль боли, поддержка семьи и пациента.",
     tags: ["Хосписный опыт", "Инъекции", "Ночные смены"],
-    image: require("../../assets/performers/perf_1.png")
+    image: require("../../assets/performers/perf_1.png"),
   },
   {
     id: "perf_2",
@@ -45,7 +45,7 @@ export const performers: Performer[] = [
     badge: "Надёжный",
     about: "Гигиенический уход, питание, помощь в передвижении, дневные смены.",
     tags: ["Лежачие пациенты", "Питание", "Патронаж"],
-    image: require("../../assets/performers/perf_2.png")
+    image: require("../../assets/performers/perf_2.png"),
   },
   {
     id: "perf_3",
@@ -60,7 +60,7 @@ export const performers: Performer[] = [
     badge: "Премиум",
     about: "Поддержка семьи, работа с тревогой, выгорание и принятие.",
     tags: ["Семейная терапия", "Кризис", "Онко"],
-    image: require("../../assets/performers/perf_3.png")
+    image: require("../../assets/performers/perf_3.png"),
   },
   {
     id: "perf_4",
@@ -75,6 +75,6 @@ export const performers: Performer[] = [
     badge: "Быстрый отклик",
     about: "Оценка состояния, перевязки, связь с врачом, помощь семье.",
     tags: ["Срочный выезд", "Перевязки", "Контроль состояния"],
-    image: require("../../assets/performers/perf_4.png")
-  }
-];
+    image: require("../../assets/performers/perf_4.png"),
+  },
+]

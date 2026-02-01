@@ -4,6 +4,6 @@
   extends: ["expo", "prettier"],
   ignorePatterns: ["node_modules/", "dist/", "build/", ".expo/"],
   rules: {
-    "prettier/prettier": "warn"
-  }
-};
+    "prettier/prettier": "warn",
+  },
+}

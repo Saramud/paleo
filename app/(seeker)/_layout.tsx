@@ -1,20 +1,20 @@
-import { Stack, useRouter } from "expo-router";
-import { useEffect } from "react";
-import { useSession } from "../../src/session/SessionContext";
+import { Stack, useRouter } from "expo-router"
+import { useEffect } from "react"
+import { useSession } from "../../src/session/SessionContext"
 
 export default function SeekerLayout() {
-  const { currentUser } = useSession();
-  const router = useRouter();
+  const { currentUser } = useSession()
+  const router = useRouter()
 
   useEffect(() => {
     if (!currentUser) {
-      router.replace("/role-select");
-      return;
+      router.replace("/role-select")
+      return
     }
     if (currentUser.role !== "SEEKER") {
-      router.replace("/(provider)");
+      router.replace("/(provider)")
     }
-  }, [currentUser, router]);
+  }, [currentUser, router])
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
@@ -27,5 +27,5 @@ export default function SeekerLayout() {
       <Stack.Screen name="request-details" />
       <Stack.Screen name="offers-list" />
     </Stack>
-  );
+  )
 }

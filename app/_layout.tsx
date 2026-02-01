@@ -1,24 +1,24 @@
-import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import { useFonts } from "expo-font";
-import { Manrope_400Regular, Manrope_500Medium } from "@expo-google-fonts/manrope";
-import { SpaceGrotesk_500Medium, SpaceGrotesk_600SemiBold } from "@expo-google-fonts/space-grotesk";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { StyleSheet, View } from "react-native";
-import { SessionProvider } from "../src/session/SessionContext";
-import { FooterNav } from "../components/FooterNav";
-import { colors } from "../theme/tokens";
+import { Stack } from "expo-router"
+import { StatusBar } from "expo-status-bar"
+import { useFonts } from "expo-font"
+import { Manrope_400Regular, Manrope_500Medium } from "@expo-google-fonts/manrope"
+import { SpaceGrotesk_500Medium, SpaceGrotesk_600SemiBold } from "@expo-google-fonts/space-grotesk"
+import { SafeAreaProvider } from "react-native-safe-area-context"
+import { StyleSheet, View } from "react-native"
+import { SessionProvider } from "../src/session/SessionContext"
+import { FooterNav } from "../components/FooterNav"
+import { colors } from "../theme/tokens"
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     Manrope_400Regular,
     Manrope_500Medium,
     SpaceGrotesk_500Medium,
-    SpaceGrotesk_600SemiBold
-  });
+    SpaceGrotesk_600SemiBold,
+  })
 
   if (!fontsLoaded) {
-    return null;
+    return null
   }
 
   return (
@@ -28,7 +28,7 @@ export default function RootLayout() {
         <RootNavigator />
       </SessionProvider>
     </SafeAreaProvider>
-  );
+  )
 }
 
 function RootNavigator() {
@@ -46,15 +46,15 @@ function RootNavigator() {
       </View>
       <FooterNav />
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: colors.bg
+    backgroundColor: colors.bg,
   },
   stack: {
-    flex: 1
-  }
-});
+    flex: 1,
+  },
+})

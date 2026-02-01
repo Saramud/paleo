@@ -1,36 +1,36 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
-import { PillButton } from "../../components/PillButton";
-import { mockStore } from "../../src/data/mockStore";
-import { useSession } from "../../src/session/SessionContext";
-import { colors, spacing, type } from "../../theme/tokens";
+import { useLocalSearchParams, useRouter } from "expo-router"
+import { useState } from "react"
+import { StyleSheet, Text, TextInput, View } from "react-native"
+import { PillButton } from "../../components/PillButton"
+import { mockStore } from "../../src/data/mockStore"
+import { useSession } from "../../src/session/SessionContext"
+import { colors, spacing, type } from "../../theme/tokens"
 
 type Params = {
-  requestId?: string;
-};
+  requestId?: string
+}
 
 export default function OfferCreate() {
-  const { currentUser } = useSession();
-  const router = useRouter();
-  const { requestId } = useLocalSearchParams<Params>();
-  const [price, setPrice] = useState("");
-  const [message, setMessage] = useState("");
+  const { currentUser } = useSession()
+  const router = useRouter()
+  const { requestId } = useLocalSearchParams<Params>()
+  const [price, setPrice] = useState("")
+  const [message, setMessage] = useState("")
 
   const handleSend = async () => {
-    if (!currentUser || !requestId) return;
-    const parsedPrice = price ? Number(price) : undefined;
+    if (!currentUser || !requestId) return
+    const parsedPrice = price ? Number(price) : undefined
 
     await mockStore.offers.create({
       requestId: String(requestId),
       providerId: currentUser.id,
       price: Number.isNaN(parsedPrice) ? undefined : parsedPrice,
       message: message.trim() || undefined,
-      status: "SENT"
-    });
+      status: "SENT",
+    })
 
-    router.back();
-  };
+    router.back()
+  }
 
   return (
     <View style={styles.root}>
@@ -60,7 +60,7 @@ export default function OfferCreate() {
       </View>
       <PillButton onPress={handleSend}>Отправить предложение</PillButton>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -68,26 +68,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.bg,
     padding: spacing.xl,
-    gap: spacing.lg
+    gap: spacing.lg,
   },
   title: {
     fontFamily: type.heading,
     color: colors.textPrimary,
-    fontSize: 22
+    fontSize: 22,
   },
   meta: {
     fontFamily: type.body,
     color: colors.textSecondary,
-    fontSize: 14
+    fontSize: 14,
   },
   field: {
-    gap: spacing.sm
+    gap: spacing.sm,
   },
   label: {
     fontFamily: type.bodyMedium,
     color: colors.textSecondary,
     fontSize: 12,
-    letterSpacing: 1
+    letterSpacing: 1,
   },
   input: {
     borderWidth: 1,
@@ -96,10 +96,10 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     color: colors.textPrimary,
     fontFamily: type.body,
-    backgroundColor: colors.surface
+    backgroundColor: colors.surface,
   },
   textarea: {
     minHeight: 120,
-    textAlignVertical: "top"
-  }
-});
+    textAlignVertical: "top",
+  },
+})

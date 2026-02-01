@@ -10,8 +10,8 @@ export const colors = {
   accentAlt: "#2F80ED",
   accentAltSoft: "#CDE1FF",
   success: "#22C55E",
-  stroke: "#F1E6D7"
-};
+  stroke: "#F1E6D7",
+}
 
 export const spacing = {
   xs: 6,
@@ -19,22 +19,22 @@ export const spacing = {
   md: 14,
   lg: 20,
   xl: 28,
-  xxl: 36
-};
+  xxl: 36,
+}
 
 export const radii = {
   sm: 10,
   md: 16,
   lg: 22,
-  xl: 28
-};
+  xl: 28,
+}
 
 export const type = {
   display: "SpaceGrotesk_600SemiBold",
   heading: "SpaceGrotesk_500Medium",
   body: "Manrope_400Regular",
-  bodyMedium: "Manrope_500Medium"
-};
+  bodyMedium: "Manrope_500Medium",
+}
 
 export const shadow = {
   soft: {
@@ -42,6 +42,6 @@ export const shadow = {
     shadowOpacity: 0.08,
     shadowRadius: 18,
     shadowOffset: { width: 0, height: 10 },
-    elevation: 4
-  }
-};
+    elevation: 4,
+  },
+}

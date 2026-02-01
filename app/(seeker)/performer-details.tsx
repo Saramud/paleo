@@ -1,13 +1,13 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import { PillButton } from "../../components/PillButton";
-import { performers } from "../../src/data/performers";
-import { colors, radii, shadow, spacing, type } from "../../theme/tokens";
+import { useLocalSearchParams, useRouter } from "expo-router"
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native"
+import { PillButton } from "../../components/PillButton"
+import { performers } from "../../src/data/performers"
+import { colors, radii, shadow, spacing, type } from "../../theme/tokens"
 
 export default function PerformerDetails() {
-  const router = useRouter();
-  const { performerId } = useLocalSearchParams<{ performerId?: string }>();
-  const performer = performers.find((item) => item.id === performerId);
+  const router = useRouter()
+  const { performerId } = useLocalSearchParams<{ performerId?: string }>()
+  const performer = performers.find((item) => item.id === performerId)
 
   if (!performer) {
     return (
@@ -23,7 +23,7 @@ export default function PerformerDetails() {
           </PillButton>
         </View>
       </View>
-    );
+    )
   }
 
   return (
@@ -80,7 +80,7 @@ export default function PerformerDetails() {
             onPress={() =>
               router.push({
                 pathname: "/(seeker)/chat",
-                params: { performerId: performer.id }
+                params: { performerId: performer.id },
               })
             }
           >
@@ -91,7 +91,7 @@ export default function PerformerDetails() {
             onPress={() =>
               router.push({
                 pathname: "/(seeker)/invite-request",
-                params: { performerId: performer.id }
+                params: { performerId: performer.id },
               })
             }
           >
@@ -100,13 +100,13 @@ export default function PerformerDetails() {
         </View>
       </ScrollView>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: colors.bg
+    backgroundColor: colors.bg,
   },
   accentBand: {
     position: "absolute",
@@ -114,25 +114,25 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 200,
-    backgroundColor: colors.bgSoft
+    backgroundColor: colors.bgSoft,
   },
   content: {
     paddingHorizontal: spacing.xl,
     paddingTop: 48,
     paddingBottom: 80,
-    gap: spacing.lg
+    gap: spacing.lg,
   },
   topBar: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
   kicker: {
     fontFamily: type.bodyMedium,
     color: colors.accent,
     letterSpacing: 2,
     fontSize: 11,
-    textTransform: "uppercase"
+    textTransform: "uppercase",
   },
   hero: {
     flexDirection: "row",
@@ -142,114 +142,114 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.stroke,
     backgroundColor: colors.surface,
-    ...shadow.soft
+    ...shadow.soft,
   },
   heroImage: {
     width: 96,
     height: 96,
     borderRadius: 48,
-    backgroundColor: colors.accentSoft
+    backgroundColor: colors.accentSoft,
   },
   heroInfo: {
     flex: 1,
-    gap: spacing.xs
+    gap: spacing.xs,
   },
   title: {
     fontFamily: type.heading,
     fontSize: 20,
-    color: colors.textPrimary
+    color: colors.textPrimary,
   },
   subtitle: {
     fontFamily: type.body,
     fontSize: 13,
-    color: colors.textSecondary
+    color: colors.textSecondary,
   },
   ratingRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 6
+    gap: 6,
   },
   ratingValue: {
     fontFamily: type.bodyMedium,
     fontSize: 13,
-    color: colors.textPrimary
+    color: colors.textPrimary,
   },
   ratingMeta: {
     fontFamily: type.body,
     fontSize: 12,
-    color: colors.textSecondary
+    color: colors.textSecondary,
   },
   price: {
     fontFamily: type.heading,
     fontSize: 14,
-    color: colors.textPrimary
+    color: colors.textPrimary,
   },
   sectionCard: {
     padding: spacing.md,
     borderRadius: radii.md,
     borderWidth: 1,
     borderColor: colors.stroke,
-    backgroundColor: colors.surface
+    backgroundColor: colors.surface,
   },
   sectionTitle: {
     fontFamily: type.bodyMedium,
     fontSize: 12,
     color: colors.textSecondary,
     textTransform: "uppercase",
-    letterSpacing: 1
+    letterSpacing: 1,
   },
   sectionText: {
     fontFamily: type.body,
     fontSize: 14,
     color: colors.textPrimary,
     marginTop: spacing.sm,
-    lineHeight: 20
+    lineHeight: 20,
   },
   metaRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    marginTop: spacing.sm
+    marginTop: spacing.sm,
   },
   metaText: {
     fontFamily: type.bodyMedium,
     fontSize: 11,
     color: colors.textSecondary,
     textTransform: "uppercase",
-    letterSpacing: 1
+    letterSpacing: 1,
   },
   dot: {
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: colors.stroke
+    backgroundColor: colors.stroke,
   },
   tagRow: {
     flexDirection: "row",
     flexWrap: "wrap",
     gap: spacing.xs,
-    marginTop: spacing.sm
+    marginTop: spacing.sm,
   },
   tag: {
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 999,
-    backgroundColor: colors.surfaceStrong
+    backgroundColor: colors.surfaceStrong,
   },
   tagText: {
     fontFamily: type.bodyMedium,
     fontSize: 11,
-    color: colors.textSecondary
+    color: colors.textSecondary,
   },
   actions: {
-    gap: spacing.sm
+    gap: spacing.sm,
   },
   primaryButton: {
     alignSelf: "stretch",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   primaryButtonText: {
-    textAlign: "center"
+    textAlign: "center",
   },
   missingCard: {
     margin: spacing.xl,
@@ -258,6 +258,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.stroke,
     backgroundColor: colors.surfaceStrong,
-    gap: spacing.md
-  }
-});
+    gap: spacing.md,
+  },
+})

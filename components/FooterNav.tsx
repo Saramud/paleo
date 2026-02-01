@@ -1,43 +1,43 @@
-import { usePathname, useRouter } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useSession } from "../src/session/SessionContext";
-import { colors, radii, shadow, spacing, type } from "../theme/tokens";
+import { usePathname, useRouter } from "expo-router"
+import { Pressable, StyleSheet, Text, View } from "react-native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { useSession } from "../src/session/SessionContext"
+import { colors, radii, shadow, spacing, type } from "../theme/tokens"
 
 export function FooterNav() {
-  const router = useRouter();
-  const { currentUser } = useSession();
-  const insets = useSafeAreaInsets();
-  const pathname = usePathname();
+  const router = useRouter()
+  const { currentUser } = useSession()
+  const insets = useSafeAreaInsets()
+  const pathname = usePathname()
 
   if (HIDE_FOOTER_PATHS.has(pathname)) {
-    return null;
+    return null
   }
 
   const handleHome = () => {
     if (!currentUser) {
-      router.push("/");
-      return;
+      router.push("/")
+      return
     }
-    router.push(currentUser.role === "SEEKER" ? "/(seeker)" : "/(provider)");
-  };
+    router.push(currentUser.role === "SEEKER" ? "/(seeker)" : "/(provider)")
+  }
 
   const handleAnnouncement = () => {
     if (currentUser?.role === "SEEKER") {
-      router.push("/(seeker)/request-create-edit");
-      return;
+      router.push("/(seeker)/request-create-edit")
+      return
     }
-    router.push("/announcement");
-  };
+    router.push("/announcement")
+  }
 
   const handleAuth = () => {
-    router.push(currentUser ? "/more" : "/role-select");
-  };
+    router.push(currentUser ? "/more" : "/role-select")
+  }
 
   const isHomeActive =
-    pathname === "/" || pathname.startsWith("/(seeker)") || pathname.startsWith("/(provider)");
-  const isAnnouncementActive = pathname === "/announcement";
-  const isAuthActive = pathname === "/more" || pathname === "/role-select";
+    pathname === "/" || pathname.startsWith("/(seeker)") || pathname.startsWith("/(provider)")
+  const isAnnouncementActive = pathname === "/announcement"
+  const isAuthActive = pathname === "/more" || pathname === "/role-select"
 
   return (
     <View style={[styles.container, { paddingBottom: Math.max(insets.bottom, spacing.md) }]}>
@@ -55,14 +55,14 @@ export function FooterNav() {
         </Pressable>
       </View>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.sm,
-    backgroundColor: colors.bg
+    backgroundColor: colors.bg,
   },
   inner: {
     flexDirection: "row",
@@ -74,24 +74,24 @@ const styles = StyleSheet.create({
     borderColor: colors.stroke,
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.md,
-    ...shadow.soft
+    ...shadow.soft,
   },
   item: {
     flex: 1,
     alignItems: "center",
-    paddingVertical: spacing.xs
+    paddingVertical: spacing.xs,
   },
   label: {
     fontFamily: type.bodyMedium,
     fontSize: 12,
     color: colors.textPrimary,
     textTransform: "uppercase",
-    letterSpacing: 1
+    letterSpacing: 1,
   },
   labelActive: {
-    color: colors.accent
-  }
-});
+    color: colors.accent,
+  },
+})
 
 const HIDE_FOOTER_PATHS = new Set([
   "/(seeker)/performer-details",
@@ -101,5 +101,5 @@ const HIDE_FOOTER_PATHS = new Set([
   "/(seeker)/request-details",
   "/(seeker)/offers-list",
   "/(provider)/request-details",
-  "/(provider)/offer-create"
-]);
+  "/(provider)/offer-create",
+])

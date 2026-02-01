@@ -3,9 +3,7 @@
     "strict": true,
     "target": "es2020",
     "module": "esnext",
-    "lib": [
-      "es2020"
-    ],
+    "lib": ["es2020"],
     "jsx": "react-native",
     "moduleResolution": "bundler",
     "allowJs": true,
@@ -13,8 +11,6 @@
     "noEmit": true,
     "resolveJsonModule": true
   },
-  "exclude": [
-    "node_modules"
-  ],
+  "exclude": ["node_modules"],
   "extends": "expo/tsconfig.base"
 }

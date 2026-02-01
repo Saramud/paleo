@@ -1,23 +1,23 @@
-import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "expo-router";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
-import { PillButton } from "../../components/PillButton";
-import { useSession } from "../../src/session/SessionContext";
-import { mockStore } from "../../src/data/mockStore";
-import type { JobRequest, Offer } from "../../src/domain/types";
-import { colors, spacing, type } from "../../theme/tokens";
+import { useCallback, useEffect, useState } from "react"
+import { useRouter } from "expo-router"
+import { ScrollView, StyleSheet, Text, View } from "react-native"
+import { useFocusEffect } from "@react-navigation/native"
+import { PillButton } from "../../components/PillButton"
+import { useSession } from "../../src/session/SessionContext"
+import { mockStore } from "../../src/data/mockStore"
+import type { JobRequest, Offer } from "../../src/domain/types"
+import { colors, spacing, type } from "../../theme/tokens"
 
 export default function ProviderHome() {
-  const { logout, currentUser } = useSession();
-  const router = useRouter();
-  const [requests, setRequests] = useState<JobRequest[]>([]);
-  const [offers, setOffers] = useState<Offer[]>([]);
+  const { logout, currentUser } = useSession()
+  const router = useRouter()
+  const [requests, setRequests] = useState<JobRequest[]>([])
+  const [offers, setOffers] = useState<Offer[]>([])
 
   const loadData = useCallback(async () => {
-    if (!currentUser) return;
+    if (!currentUser) return
 
-    const existingRequests = await mockStore.jobRequests.list();
+    const existingRequests = await mockStore.jobRequests.list()
     if (existingRequests.length === 0) {
       await mockStore.jobRequests.create({
         title: "Круглосуточный уход",
@@ -25,54 +25,54 @@ export default function ProviderHome() {
         budget: 3200,
         locationText: "ЮВАО",
         seekerId: "seeker_demo",
-        status: "PUBLISHED"
-      });
+        status: "PUBLISHED",
+      })
       await mockStore.jobRequests.create({
         title: "Патронаж 3 раза в неделю",
         description: "Гигиенический уход, питание, упражнения.",
         budget: 1800,
         locationText: "СЗАО",
         seekerId: "seeker_demo",
-        status: "PUBLISHED"
-      });
+        status: "PUBLISHED",
+      })
       await mockStore.jobRequests.create({
         title: "Психологическая поддержка семьи",
         description: "Нужны консультации по адаптации и выгоранию.",
         budget: 2500,
         locationText: "ЦАО",
         seekerId: "seeker_demo",
-        status: "DRAFT"
-      });
+        status: "DRAFT",
+      })
     }
 
-    const allRequests = await mockStore.jobRequests.list();
-    const allOffers = await mockStore.offers.list();
+    const allRequests = await mockStore.jobRequests.list()
+    const allOffers = await mockStore.offers.list()
 
-    setOffers(allOffers.filter((offer) => offer.providerId === currentUser.id));
+    setOffers(allOffers.filter((offer) => offer.providerId === currentUser.id))
 
     const offeredRequestIds = new Set(
       allOffers
         .filter((offer) => offer.providerId === currentUser.id)
-        .map((offer) => offer.requestId)
-    );
+        .map((offer) => offer.requestId),
+    )
 
     setRequests(
       allRequests.filter(
-        (request) => request.status === "PUBLISHED" && !offeredRequestIds.has(request.id)
-      )
-    );
-  }, [currentUser]);
+        (request) => request.status === "PUBLISHED" && !offeredRequestIds.has(request.id),
+      ),
+    )
+  }, [currentUser])
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    loadData()
+  }, [loadData])
 
   useFocusEffect(
     useCallback(() => {
-      loadData();
-      return undefined;
-    }, [loadData])
-  );
+      loadData()
+      return undefined
+    }, [loadData]),
+  )
 
   return (
     <View style={styles.root}>
@@ -122,7 +122,7 @@ export default function ProviderHome() {
                     onPress={() =>
                       router.push({
                         pathname: "/(provider)/request-details",
-                        params: { requestId: item.id }
+                        params: { requestId: item.id },
                       })
                     }
                   >
@@ -149,7 +149,7 @@ export default function ProviderHome() {
         </View>
       </ScrollView>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.bg,
     alignItems: "stretch",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   accentBand: {
     position: "absolute",
@@ -165,22 +165,22 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 180,
-    backgroundColor: colors.bgSoft
+    backgroundColor: colors.bgSoft,
   },
   content: {
     gap: spacing.lg,
-    padding: spacing.xl
+    padding: spacing.xl,
   },
   topBar: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
   roleText: {
     fontFamily: type.bodyMedium,
     color: colors.textSecondary,
     fontSize: 12,
-    letterSpacing: 2
+    letterSpacing: 2,
   },
   hero: {
     padding: spacing.xl,
@@ -188,99 +188,99 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.stroke,
     backgroundColor: colors.surfaceStrong,
-    gap: spacing.sm
+    gap: spacing.sm,
   },
   kicker: {
     fontFamily: type.bodyMedium,
     color: colors.accent,
     letterSpacing: 2,
     fontSize: 11,
-    textTransform: "uppercase"
+    textTransform: "uppercase",
   },
   title: {
     fontFamily: type.heading,
     color: colors.textPrimary,
-    fontSize: 24
+    fontSize: 24,
   },
   subtitle: {
     fontFamily: type.body,
     color: colors.textSecondary,
     fontSize: 14,
     textAlign: "left",
-    lineHeight: 20
+    lineHeight: 20,
   },
   section: {
-    gap: spacing.sm
+    gap: spacing.sm,
   },
   sectionTitle: {
     fontFamily: type.bodyMedium,
     color: colors.textPrimary,
     fontSize: 14,
-    letterSpacing: 1
+    letterSpacing: 1,
   },
   empty: {
     fontFamily: type.body,
     color: colors.textSecondary,
-    fontSize: 13
+    fontSize: 13,
   },
   card: {
     padding: spacing.md,
     borderRadius: 12,
     borderWidth: 1,
     borderColor: colors.stroke,
-    backgroundColor: colors.surface
+    backgroundColor: colors.surface,
   },
   cardAction: {
-    marginTop: spacing.sm
+    marginTop: spacing.sm,
   },
   cardTitle: {
     fontFamily: type.bodyMedium,
     color: colors.textPrimary,
-    fontSize: 14
+    fontSize: 14,
   },
   cardMeta: {
     fontFamily: type.body,
     color: colors.textSecondary,
     fontSize: 12,
-    marginTop: 4
+    marginTop: 4,
   },
   fullWidthButton: {
     alignSelf: "stretch",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   fullWidthButtonText: {
-    textAlign: "center"
+    textAlign: "center",
   },
   badgeRow: {
-    flexDirection: "row"
+    flexDirection: "row",
   },
   badge: {
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 999,
-    backgroundColor: colors.accentSoft
+    backgroundColor: colors.accentSoft,
   },
   badgeText: {
     fontFamily: type.bodyMedium,
     fontSize: 11,
     color: colors.textPrimary,
-    letterSpacing: 1
-  }
-});
+    letterSpacing: 1,
+  },
+})
 
 const badgeStyle = (status: JobRequest["status"]) => {
   switch (status) {
     case "DRAFT":
-      return { backgroundColor: colors.accentSoft };
+      return { backgroundColor: colors.accentSoft }
     case "PUBLISHED":
-      return { backgroundColor: colors.accent };
+      return { backgroundColor: colors.accent }
     case "ASSIGNED":
     case "IN_PROGRESS":
-      return { backgroundColor: colors.accentAltSoft };
+      return { backgroundColor: colors.accentAltSoft }
     case "DONE":
-      return { backgroundColor: colors.success };
+      return { backgroundColor: colors.success }
     case "CANCELED":
     default:
-      return { backgroundColor: colors.stroke };
+      return { backgroundColor: colors.stroke }
   }
-};
+}
